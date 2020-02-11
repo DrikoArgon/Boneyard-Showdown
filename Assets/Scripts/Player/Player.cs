@@ -35,13 +35,15 @@ public class Player : MonoBehaviour {
 	public float maxLife;
 	private float lifeWhileInvulnerable;
 	public float currentLife;
-	public int boneAmount;
+    public float currentExp;
+    public float expNeededToNextLevel;
+    public float magicDamage;
+    public float stabDamage;
+
+    public int boneAmount;
 	public int level;
 	public int maxLevel;
-	public float currentExp;
-	public float expNeededToNextLevel;
-	public float magicDamage;
-	public float stabDamage;
+
 
 	//Controls
 	public KeyCode moveUpKey;
@@ -65,12 +67,12 @@ public class Player : MonoBehaviour {
 	public float knifeCooldownInSeconds;
 	public float invulnerableSeconds;
 
-
 	private float shotTimeStamp;
 	private float knifeTimeStamp;
 	private float invulnerableTimeStamp;
 
-	//States
+    //States
+    private bool moving;
 	private bool attacking;
 	public bool receivedDamage;
 	public bool invulnerable;
@@ -79,6 +81,7 @@ public class Player : MonoBehaviour {
 	public bool levelingUp;
 
 	private Animator animator;
+    private Rigidbody2D myRigidBody;
 	private Text boneCounterText;
 	private Text mergedBoneCounterText;
 
@@ -89,12 +92,17 @@ public class Player : MonoBehaviour {
 	private bool toggleFlashing = false;
 
 
+    private void Awake() {
 
-	// Use this for initialization
-	void Start () {
+        animator = GetComponent<Animator>();
+        myRigidBody = GetComponent<Rigidbody2D>();
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    // Use this for initialization
+    void Start () {
 		instance = this.gameObject;
-		animator = GetComponent<Animator>();
-		mySpriteRenderer = GetComponent<SpriteRenderer> ();
+
 		shotTimeStamp = 0;
 		knifeTimeStamp = 0;
 		attacking = false;
@@ -112,22 +120,17 @@ public class Player : MonoBehaviour {
 		magicDamage = 1;
 		stabDamage = 2;
 	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
+
+    private void Update() {
+        
+    }
+
+    // Update is called once per frame
+    void FixedUpdate () {
 		//movement Logic
 		if (!attacking && !dying) {
-			
-			if (Input.GetKey (moveUpKey) || (Input.GetAxis (moveVerticalGamepadAxis) >= 0.5f)) {
-				MoveUp ();
-			} else if (Input.GetKey (moveRightKey) || (Input.GetAxis (moveHorizontalGamepadAxis) >= 0.5f)) {
-				MoveRight ();
-			} else if (Input.GetKey (moveLeftKey) || (Input.GetAxis (moveHorizontalGamepadAxis) <= -0.5f)) {
-				MoveLeft ();
-			} else if (Input.GetKey (moveDownKey) || (Input.GetAxis (moveVerticalGamepadAxis) <= -0.5f)) {
-				MoveDown ();
-			}  
 
+            Move();
 
 		}
 
@@ -203,7 +206,7 @@ public class Player : MonoBehaviour {
 
 		if (currentLife <= 0 && !dead && !dying) {
 			dying = true;
-			animator.SetBool ("dying", true);
+            animator.Play("Dying");
 			StartCoroutine (SpawnBones ());
 		}
 
@@ -222,10 +225,29 @@ public class Player : MonoBehaviour {
 			
 	}
 
-	public void MoveUp(){
-		GetComponent<Rigidbody2D> ().transform.position += Vector3.up * speed * Time.deltaTime;
-		animator.SetBool ("moving", true);
-		animator.SetInteger ("direction", 1);
+    void CheckStatusForAnimation() {
+        if (!dying && !dead) {
+            animator.Play("Walk");
+        }
+    }
+
+    public void Move() {
+        if (Input.GetKey(moveUpKey) || (Input.GetAxis(moveVerticalGamepadAxis) >= 0.5f)) {
+            MoveUp();
+        } else if (Input.GetKey(moveRightKey) || (Input.GetAxis(moveHorizontalGamepadAxis) >= 0.5f)) {
+            MoveRight();
+        } else if (Input.GetKey(moveLeftKey) || (Input.GetAxis(moveHorizontalGamepadAxis) <= -0.5f)) {
+            MoveLeft();
+        } else if (Input.GetKey(moveDownKey) || (Input.GetAxis(moveVerticalGamepadAxis) <= -0.5f)) {
+            MoveDown();
+        }
+
+    }
+
+    public void MoveUp(){
+		myRigidBody.transform.position += Vector3.up * speed * Time.deltaTime;
+		animator.SetFloat("HorizontalMovement", 0f);
+        animator.SetFloat("VerticalMovement", 1f);
 		direction = PlayerDirection.Up;
 	}
 
@@ -234,33 +256,37 @@ public class Player : MonoBehaviour {
 	// Move o jogador para direita e aciona as animações respectivas
 	//   
 	public void MoveRight(){
-		GetComponent<Rigidbody2D> ().transform.position += Vector3.right * speed * Time.deltaTime;
-		animator.SetBool ("moving", true);
-		animator.SetInteger ("direction", 2);
-		direction = PlayerDirection.Right;
-	}
+        myRigidBody.transform.position += Vector3.right * speed * Time.deltaTime;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1, 1);
+        lifeBar.parent.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1, 1);
+        animator.SetFloat("HorizontalMovement", 1f);
+        animator.SetFloat("VerticalMovement", 0f);
+        direction = PlayerDirection.Right;
+    }
 
 	// função moveDown
 	//
 	// Move o jogador para baixo e aciona as animações respectivas
 	//   
 	public void MoveDown(){
-		GetComponent<Rigidbody2D> ().transform.position += Vector3.down * speed * Time.deltaTime;
-		animator.SetBool ("moving", true);
-		animator.SetInteger ("direction", 3);
-		direction = PlayerDirection.Down;
-	}
+        myRigidBody.transform.position += Vector3.down * speed * Time.deltaTime;
+        animator.SetFloat("HorizontalMovement", 0f);
+        animator.SetFloat("VerticalMovement", -1f);
+        direction = PlayerDirection.Down;
+    }
 
 	// função moveLeft
 	//
 	// Move o jogador para esquerda e aciona as animações respectivas
 	//   
 	public void MoveLeft(){
-		GetComponent<Rigidbody2D> ().transform.position += Vector3.left * speed * Time.deltaTime;
-		animator.SetBool ("moving", true);
-		animator.SetInteger ("direction", 4);
-		direction = PlayerDirection.Left;
-	}
+        myRigidBody.transform.position += Vector3.left * speed * Time.deltaTime;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, 1, 1);
+        lifeBar.parent.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, 1, 1);
+        animator.SetFloat("HorizontalMovement", 1f);
+        animator.SetFloat("VerticalMovement", 0f);
+        direction = PlayerDirection.Left;
+    }
 
 	public void LevelUp(){
 
@@ -330,8 +356,7 @@ public class Player : MonoBehaviour {
 
 
 	public void TurnToGhost(){
-		animator.SetBool ("dying", false);
-		animator.SetBool ("dead", true);
+        animator.Play("Dead");
 		dying = false;
 		dead = true;
 
@@ -341,8 +366,8 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Reborn(){
-		animator.SetBool ("dead", false);
-		dead = false;
+        animator.Play("Walk");
+        dead = false;
 		currentLife = maxLife;
 
 		returnText.enabled = false;
