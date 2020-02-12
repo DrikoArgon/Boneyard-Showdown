@@ -4,26 +4,38 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
 
-	public Camera player1Camera;
-	public Camera player2Camera;
-	public Camera mergedCamera;
-	public GameObject player1RightCameraLimit;
-	public GameObject player2RightCameraLimit;
-	public GameObject player1LeftCameraLimit;
-	public GameObject player2LeftCameraLimit;
+    public float distanceBetweenPlayersToActivate = 3.2f;
+    public float distanceBetweenPlayersToDeactivate = 6f;
+    public GameObject player1Camera;
+	public GameObject player2Camera;
+	public GameObject mergedCamera;
+
+
+    private Transform player1;
+    private Transform player2;
 
 	private bool mergedCameraActivated;
 	private bool player1AlreadyCrossedPlayer2;
 
-	// Use this for initialization
-	void Start () {
+    private float currentDistanceBetweenPlayers;
+
+    private void Awake() {
+        player1 = GameObject.Find("Player").transform;
+        player2 = GameObject.Find("Player2").transform;
+    }
+
+    // Use this for initialization
+    void Start () {
 		mergedCameraActivated = false;
 		player1AlreadyCrossedPlayer2 = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (player1RightCameraLimit.transform.position.x >= player2LeftCameraLimit.transform.position.x) {
+
+        currentDistanceBetweenPlayers = Mathf.Abs(player1.position.x - player2.position.x);
+
+        /*if (player1RightCameraLimit.transform.position.x >= player2LeftCameraLimit.transform.position.x) {
 			
 			if (!mergedCameraActivated && !player1AlreadyCrossedPlayer2) {
 				
@@ -67,7 +79,23 @@ public class CameraManager : MonoBehaviour {
 			} 
 
 		}
+        */
 
+        if (!mergedCameraActivated) {
+            if(currentDistanceBetweenPlayers <= distanceBetweenPlayersToActivate) {
+                player1Camera.SetActive(false);
+                player2Camera.SetActive(false);
+                mergedCamera.SetActive(true);
+                mergedCameraActivated = true;
+            }
+        } else {
+            if (currentDistanceBetweenPlayers > distanceBetweenPlayersToDeactivate) {
+                player1Camera.SetActive(true);
+                player2Camera.SetActive(true);
+                mergedCamera.SetActive(false);
+                mergedCameraActivated = false;
+            }
+        }
 
 		
 	}

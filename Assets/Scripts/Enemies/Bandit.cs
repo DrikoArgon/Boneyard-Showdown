@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bandit : Enemy {
+public class Bandit : MeleeEnemy {
 
-	public float delayToAct;
 	public Transform boneSpawnPoint1;
 	public Transform boneSpawnPoint2;
 	public Transform boneSpawnPoint3;
@@ -15,58 +14,37 @@ public class Bandit : Enemy {
 	public Transform slashSpawnPointUp;
 	public Transform slashSpawnPointRight;
 	public Transform slashSpawnPointDown;
-	public Transform slashSpawnPointLeft;
 	public GameObject slashPrefab;
-	public GameObject player1;
-	public GameObject player2;
 
-	private float timeToAct;
-	private int direction;
+    private void Awake() {
+        InitializeEnemy();
+    }
 
-	private Player player1Variables;
-	private Player player2Variables;
-
-    private ChaseHandler chasehandler;
-    private WanderHandler wanderHandler;
-    private DetectionSystem detectionSystem;
-
-	// Use this for initialization
-	void Start () {
-
-		animator = GetComponent<Animator> ();
-		source = GetComponent<AudioSource> ();
-        myRigidBody = GetComponent<Rigidbody2D>();
-		receivedDamage = false;
-		mySpriteRenderer = GetComponent<SpriteRenderer> ();
-
-        player1 = GameObject.Find("Player");
-        player2 = GameObject.Find("Player2");
-
-        chasehandler = new ChaseHandler(animator, myRigidBody, transform, speed);
-        wanderHandler = new WanderHandler(delayToAct);
-        detectionSystem = new DetectionSystem(transform, player1.transform, player2.transform);
-
-		player1Variables = player1.GetComponent<Player> ();
-		player2Variables = player2.GetComponent<Player> ();
-
-		dying = false;
-		
+    // Use this for initialization
+    void Start () {
+	
 	}
 
     private void Update() {
+
+
+        CheckDeath();
 
         if (dying) {
             return;
         }
 
-        CheckDeath();
-
+        CheckAttackCooldown();
 
         // Finding Target Logic --------------------------------------------------------
 
         detectionSystem.HandlePlayerDetection();
 
         //--------------------------------------------------------------------------------
+
+        if (!detectionSystem.IsTargetDetected()) {
+            enemyDirection = wanderHandler.RandomWander();
+        }
 
         CheckInvinsibility();
 
@@ -80,10 +58,13 @@ public class Bandit : Enemy {
     // Update is called once per frame
     void FixedUpdate () {
 
-		if (!detectionSystem.IsTargetDetected()) {
+        if (dying) {
+            return;
+        }
+
+        if (!detectionSystem.IsTargetDetected()) {
 
             //Random movement -------------------------------------------------
-            enemyDirection = wanderHandler.RandomWander();
 
             BasicMovement();
 			//----------------------------------------------------------------------
@@ -105,22 +86,25 @@ public class Bandit : Enemy {
 
 
 	void OnCollisionEnter2D(Collision2D other){
-	
-		if (other.gameObject.tag == "Player1" && !player1Variables.dead) {
-			attacking = true;
 
-            SpawnSlash();
+        if (!isAttackOnCooldown) {
+            if (other.gameObject.tag == "Player1" && !player1Variables.dead) {
+                attacking = true;
 
-            animator.Play("Attack");
+                SpawnSlash();
+
+                animator.Play("Attack");
+            }
+            //
+            if (other.gameObject.tag == "Player2" && !player2Variables.dead) {
+                attacking = true;
+
+                SpawnSlash();
+
+                animator.Play("Attack");
+            }
         }
-//
-		if (other.gameObject.tag == "Player2" && !player2Variables.dead) {
-			attacking = true;
-
-            SpawnSlash();
-
-            animator.Play("Attack");
-        }
+		
 //
 	}
 
@@ -145,6 +129,8 @@ public class Bandit : Enemy {
                 Instantiate(slashPrefab, slashSpawnPointDown.position, Quaternion.identity);
                 break;
         }
+
+        isAttackOnCooldown = true;
     }
 
 	void onCollisionStay(Collision2D other){
@@ -169,22 +155,5 @@ public class Bandit : Enemy {
 
 	}
 
-	public void StopAttacking(){
-
-		attacking = false;
-
-	}
-
-    void CheckStatusForAnimation() {
-        if (!dying) {
-            if (!attacking) {
-                if (walking) {
-                    animator.Play("Walk");
-                } else {
-                    animator.Play("Idle");
-                }
-            }
-        }
-    }
 
 }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 95520652354652350}
   - component: {fileID: 114330903731446674}
   - component: {fileID: 82028043367167876}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Chiken
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -162,10 +162,10 @@ MonoBehaviour:
   receivedDamage: 0
   invulnerable: 0
   numberOfBones: 1
+  deathSound: {fileID: 0}
+  mySpawner: {fileID: 0}
   invulnerableSeconds: 1
   delayToAct: 2
-  mySpawner: {fileID: 0}
-  dieSound: {fileID: 8300000, guid: 31dc003963c2642dcad702f911d3cb9c, type: 3}
 --- !u!82 &82028043367167876
 AudioSource:
   m_ObjectHideFlags: 0

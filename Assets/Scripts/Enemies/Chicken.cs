@@ -2,43 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chicken : Enemy {
+public class Chicken : PassiveEnemy {
 
-	public float delayToAct;
-    
-	private int direction;
+    // Use this for initialization
 
-    private WanderHandler wanderHandler;
+    private void Awake() {
+        InitializeEnemy();
+    }
 
-	// Use this for initialization
-	void Start () {
-
-		source = GetComponent<AudioSource> ();
-		animator = GetComponent<Animator> ();
-        myRigidBody = GetComponent<Rigidbody2D>();
-		receivedDamage = false;
-		mySpriteRenderer = GetComponent<SpriteRenderer> ();
-		dying = false;
-        wanderHandler = new WanderHandler(delayToAct);
-		int randomNumber = Random.Range (1, 6);
+    void Start () {
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+        //Chicken dying
+        CheckDeath();
+
+
         if (dying) {
             return;
         }
 
-        //Chicken dying
-        CheckDeath();
 
         //Chicken walking logic
         enemyDirection = wanderHandler.RandomWander();
-
-        //Move chicken
-        BasicMovement();
 
         CheckInvinsibility();
 
@@ -46,6 +35,15 @@ public class Chicken : Enemy {
 
         DefineDirectionToLook();
 
+    }
+
+    private void FixedUpdate() {
+
+        if (dying) {
+            return;
+        }
+        //Move chicken
+        BasicMovement();
     }
 
 

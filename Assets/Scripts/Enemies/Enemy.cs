@@ -42,17 +42,14 @@ public class Enemy : MonoBehaviour {
 
 	protected float invulnerableTimeStamp;
 
+    protected virtual void InitializeEnemy() {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        source = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
+        myRigidBody = GetComponent<Rigidbody2D>();
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
 
-		
-	}
+    }
 
 	public void Flash(){
 
@@ -99,6 +96,18 @@ public class Enemy : MonoBehaviour {
     protected virtual void CheckDamageReceived() {
         if (receivedDamage && life > 0) {
             ToggleInvinsibility();
+        }
+    }
+
+    protected virtual void CheckStatusForAnimation() {
+        if (!dying) {
+            if (!attacking) {
+                if (walking) {
+                    animator.Play("Walk");
+                } else {
+                    animator.Play("Idle");
+                }
+            }
         }
     }
 

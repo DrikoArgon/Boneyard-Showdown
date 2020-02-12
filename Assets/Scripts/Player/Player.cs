@@ -27,7 +27,6 @@ public class Player : MonoBehaviour {
 	//Firing points
 	public Transform upFiringPoint; 
 	public Transform rightFiringPoint; 
-	public Transform leftFiringPoint; 
 	public Transform downFiringPoint; 
 
 	//Stats variables
@@ -150,7 +149,7 @@ public class Player : MonoBehaviour {
 					} else if (direction == PlayerDirection.Right) {
 						Instantiate (magicProjectilePrefab, rightFiringPoint.position, Quaternion.identity);
 					} else if (direction == PlayerDirection.Left) {
-						Instantiate (magicProjectilePrefab, leftFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 180)));
+						Instantiate (magicProjectilePrefab, rightFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 180)));
 					} else {
 						Instantiate (magicProjectilePrefab, downFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 270)));
 					}
@@ -170,7 +169,7 @@ public class Player : MonoBehaviour {
 					} else if (direction == PlayerDirection.Right) {
 						Instantiate (knifePrefab, rightFiringPoint.position, Quaternion.identity);
 					} else if (direction == PlayerDirection.Left) {
-						Instantiate (knifePrefab, leftFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 180)));
+						Instantiate (knifePrefab, rightFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 180)));
 					} else {
 						Instantiate (knifePrefab, downFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 270)));
 					}

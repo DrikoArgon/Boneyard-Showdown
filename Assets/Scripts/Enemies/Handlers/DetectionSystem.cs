@@ -19,10 +19,12 @@ public class DetectionSystem {
     private Player player2Variables;
 
     private bool targetSpotted;
+    private float detectionRange;
 
-    public DetectionSystem(Transform transform, Transform player1, Transform player2) {
+    public DetectionSystem(Transform transform, Transform player1, Transform player2,float detectionRange) {
 
         enemyTransform = transform;
+        this.detectionRange = detectionRange; 
         this.player1 = player1;
         this.player2 = player2;
 
@@ -32,9 +34,9 @@ public class DetectionSystem {
 
     void LookForTarget() {
 
-        if ((Vector2.Distance(enemyTransform.position, player1.transform.position) <= 2 || Vector2.Distance(enemyTransform.position, player2.transform.position) <= 2)) {
+        if ((Vector2.Distance(enemyTransform.position, player1.transform.position) <= detectionRange || Vector2.Distance(enemyTransform.position, player2.transform.position) <= detectionRange)) {
 
-            if (Vector2.Distance(enemyTransform.position, player1.transform.position) <= 2 && !player1Variables.dead) {     
+            if (Vector2.Distance(enemyTransform.position, player1.transform.position) <= detectionRange && !player1Variables.dead) {     
                 
                 currentTarget = player1;
 
@@ -57,7 +59,7 @@ public class DetectionSystem {
     }
 
     void CheckDistanceToTarget() {
-        if (Vector2.Distance(enemyTransform.position, currentTarget.position) > 2 || currentTargetVariables.dead) {
+        if (Vector2.Distance(enemyTransform.position, currentTarget.position) > detectionRange || currentTargetVariables.dead) {
             targetSpotted = false;
             currentTarget = null;
         }
