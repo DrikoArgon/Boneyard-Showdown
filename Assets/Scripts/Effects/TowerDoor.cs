@@ -5,6 +5,7 @@ using UnityEngine;
 public class TowerDoor : MonoBehaviour {
 
 	public Transform destinationSpawnPoint;
+    public PolygonCollider2D destinationCameraConfiner;
 	public PlayerWhoOwnsTheCastle castleOwner;
 
 	public enum PlayerWhoOwnsTheCastle
@@ -27,11 +28,13 @@ public class TowerDoor : MonoBehaviour {
 
 		if (castleOwner == PlayerWhoOwnsTheCastle.Player1) {
 			if (other.tag == "Player1") {
+                CameraManager.instance.UpdateCameraConfiner(destinationCameraConfiner, true);
 				other.transform.position = destinationSpawnPoint.position;
 			}
 		} else {
 			if (other.tag == "Player2") {
-				other.transform.position = destinationSpawnPoint.position;
+                CameraManager.instance.UpdateCameraConfiner(destinationCameraConfiner, false);
+                other.transform.position = destinationSpawnPoint.position;
 			}
 		}
 			

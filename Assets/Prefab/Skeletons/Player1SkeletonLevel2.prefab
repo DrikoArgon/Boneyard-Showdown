@@ -105,6 +105,7 @@ MonoBehaviour:
   riseSound: {fileID: 8300000, guid: 01ee4aafcdeda49e5a44e365e5ab5d8a, type: 3}
   attackingCastleSound: {fileID: 8300000, guid: fd0e7a212d2cf49daa277b0c7dbef998,
     type: 3}
+  alreadyBeingAttacked: 0
 --- !u!50 &50815343007002290
 Rigidbody2D:
   serializedVersion: 4
@@ -138,7 +139,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 1
+  m_UsedByComposite: 0
   m_Offset: {x: 0.005996052, y: -0.0026048124}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}

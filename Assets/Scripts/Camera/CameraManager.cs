@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
+
+    public static CameraManager instance;
 
     public float distanceBetweenPlayersToActivate = 3.2f;
     public float distanceBetweenPlayersToDeactivate = 6f;
@@ -10,6 +13,13 @@ public class CameraManager : MonoBehaviour {
 	public GameObject player2Camera;
 	public GameObject mergedCamera;
 
+    private CameraShake player1CameraShaker;
+    private CameraShake player2CameraShaker;
+    private CameraShake mergedCameraShaker;
+
+    private CinemachineConfiner player1CameraConfiner;
+    private CinemachineConfiner player2CameraConfiner;
+    private CinemachineConfiner mergedCameraConfiner;
 
     private Transform player1;
     private Transform player2;
@@ -20,8 +30,26 @@ public class CameraManager : MonoBehaviour {
     private float currentDistanceBetweenPlayers;
 
     private void Awake() {
-        player1 = GameObject.Find("Player").transform;
-        player2 = GameObject.Find("Player2").transform;
+
+
+        if(CameraManager.instance == null) {
+            instance = this;
+            player1 = GameObject.Find("Player").transform;
+            player2 = GameObject.Find("Player2").transform;
+
+            player1CameraShaker = player1Camera.GetComponent<CameraShake>();
+            player2CameraShaker = player2Camera.GetComponent<CameraShake>();
+            mergedCameraShaker = mergedCamera.GetComponent<CameraShake>();
+
+            player1CameraConfiner = player1Camera.GetComponentInChildren<CinemachineConfiner>();
+            player2CameraConfiner = player2Camera.GetComponentInChildren<CinemachineConfiner>();
+            mergedCameraConfiner = mergedCamera.GetComponentInChildren<CinemachineConfiner>();
+
+        } else {
+            Destroy(this);
+        }
+        
+
     }
 
     // Use this for initialization
@@ -34,52 +62,6 @@ public class CameraManager : MonoBehaviour {
 	void Update () {
 
         currentDistanceBetweenPlayers = Mathf.Abs(player1.position.x - player2.position.x);
-
-        /*if (player1RightCameraLimit.transform.position.x >= player2LeftCameraLimit.transform.position.x) {
-			
-			if (!mergedCameraActivated && !player1AlreadyCrossedPlayer2) {
-				
-				//mergedCamera.transform.position = new Vector3 (player1RightCameraLimit.transform.position.x,mergedCamera.transform.position.y , mergedCamera.transform.position.z);
-				player1Camera.enabled = false;
-				player2Camera.enabled = false;
-				mergedCamera.enabled = true;
-				mergedCameraActivated = true;
-			}
-		} else {
-			if (mergedCameraActivated) {
-				
-				mergedCameraActivated = false;
-				player1Camera.enabled = true;
-				player2Camera.enabled = true;
-				mergedCamera.enabled = false;
-				player1AlreadyCrossedPlayer2 = false;
-
-			}
-		}
-
-		if (player1LeftCameraLimit.transform.position.x >= player2RightCameraLimit.transform.position.x) {
-			if (mergedCameraActivated) {
-
-				mergedCameraActivated = false;
-				player1Camera.enabled = true;
-				player2Camera.enabled = true;
-				mergedCamera.enabled = false;
-				player1AlreadyCrossedPlayer2 = true;
-
-			}
-		} else {
-			if (!mergedCameraActivated && player1AlreadyCrossedPlayer2) {
-
-				//mergedCamera.transform.position = new Vector3 (player2RightCameraLimit.transform.position.x,mergedCamera.transform.position.y, mergedCamera.transform.position.z);
-				player1Camera.enabled = false;
-				player2Camera.enabled = false;
-				mergedCamera.enabled = true;
-				mergedCameraActivated = true;
-
-			} 
-
-		}
-        */
 
         if (!mergedCameraActivated) {
             if(currentDistanceBetweenPlayers <= distanceBetweenPlayersToActivate) {
@@ -96,7 +78,41 @@ public class CameraManager : MonoBehaviour {
                 mergedCameraActivated = false;
             }
         }
-
-		
+	
 	}
+
+    public void UpdateCameraConfiner(PolygonCollider2D confiner, bool isPlayer1) {
+
+        if (mergedCameraActivated) {
+            mergedCameraConfiner.m_BoundingShape2D = confiner;
+            player1CameraConfiner.m_BoundingShape2D = confiner;
+            player2CameraConfiner.m_BoundingShape2D = confiner;
+        } else {
+            if (isPlayer1) {
+                player1CameraConfiner.m_BoundingShape2D = confiner;
+            } else {
+                player2CameraConfiner.m_BoundingShape2D = confiner;
+            }
+
+        }
+    }
+
+
+    public void ShakePlayerCamera(float duration, float amplitude, float frequency, bool isPlayer1) {
+        if (mergedCameraActivated) {
+            ShakeMergedCamera(duration, amplitude, frequency);
+        } else {
+            if (isPlayer1) {
+                player1CameraShaker.ShakeCameraCinemachine(duration, amplitude, frequency);
+            } else {
+                player2CameraShaker.ShakeCameraCinemachine(duration, amplitude, frequency);
+            }
+            
+        }
+    }
+
+    void ShakeMergedCamera(float duration, float amplitude, float frequency) {
+        mergedCameraShaker.ShakeCameraCinemachine(duration, amplitude, frequency);
+    }
+
 }

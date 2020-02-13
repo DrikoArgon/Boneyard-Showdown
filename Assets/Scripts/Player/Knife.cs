@@ -59,7 +59,13 @@ public class Knife : MonoBehaviour {
 			enemyVariables.life -= stabDamage;
 			enemyVariables.receivedDamage = true;
 
-		}
+            if (player == PlayerWhoOwnsTheKnife.Player1) {
+                CameraManager.instance.ShakePlayerCamera(0.1f, 3f, 0.5f, true);
+            } else {
+                CameraManager.instance.ShakePlayerCamera(0.1f, 3f, 0.5f, false);
+            }
+
+        }
 
 		if (player == PlayerWhoOwnsTheKnife.Player1) {
 			if (other.tag == "Player2") {
@@ -69,8 +75,7 @@ public class Knife : MonoBehaviour {
 					enemyPlayer.receivedDamage = true;
 				}
 
-
-			}
+            }
 		} else {
 			if (other.tag == "Player1") {
 				Player enemyPlayer = other.GetComponent<Player> ();
@@ -79,10 +84,11 @@ public class Knife : MonoBehaviour {
 					enemyPlayer.receivedDamage = true;
 				}
 
-			}
+            }
 		}
 
+        
 
+    }
 
-	}
 }

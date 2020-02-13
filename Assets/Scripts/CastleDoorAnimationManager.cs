@@ -30,18 +30,12 @@ public class CastleDoorAnimationManager : MonoBehaviour {
 
 		if (player == PlayerWhoOwnsTheCastle.Player1) {
 			if (other.tag == "Player1") {
-				doorAnimator.SetBool("opening", true);
-				doorAnimator.SetBool ("closed", false);
-				doorAnimator.SetBool("opened", false);
-				doorAnimator.SetBool ("closing", false);
+                doorAnimator.Play("Open");
 			}
 		} else {
 			if (other.tag == "Player2") {
-				doorAnimator.SetBool ("opening", true);
-				doorAnimator.SetBool ("closed", false);
-				doorAnimator.SetBool("opened", false);
-				doorAnimator.SetBool ("closing", false);
-			}
+                doorAnimator.Play("Open");
+            }
 		}
 
 
@@ -52,32 +46,13 @@ public class CastleDoorAnimationManager : MonoBehaviour {
 
 		if (player == PlayerWhoOwnsTheCastle.Player1) {
 			if (other.tag == "Player1") {
-				doorAnimator.SetBool("closing", true);
-				doorAnimator.SetBool ("opened", false);
-				doorAnimator.SetBool("closed", false);
-				doorAnimator.SetBool ("opening", false);
-			}
+                doorAnimator.Play("Close");
+            }
 		} else {
 			if (other.tag == "Player2") {
-				doorAnimator.SetBool ("closing", true);
-				doorAnimator.SetBool ("opened", false);
-				doorAnimator.SetBool("closed", false);
-				doorAnimator.SetBool ("opening", false);
-			}
+                doorAnimator.Play("Close");
+            }
 		}
 	}
 
-	public void FinishedOpening(){
-		doorAnimator.SetBool ("opened", true);
-		doorAnimator.SetBool("opening", false);
-		doorAnimator.SetBool("closed", false);
-		doorAnimator.SetBool ("closing", false);
-	}
-
-	public void FinishedClosing(){
-		doorAnimator.SetBool ("closed", true);
-		doorAnimator.SetBool ("closing", false);
-		doorAnimator.SetBool("opened", false);
-		doorAnimator.SetBool ("opening", false);
-	}
 }

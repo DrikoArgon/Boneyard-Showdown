@@ -73,33 +73,50 @@ public class Skeleton : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 
 		if (direction == DirectionToMove.Right) {
-			if (other.tag == "Player2Skeleton" && !attackingCastle) {
-				attackingSkeleton = true;
-				skeletonToAttack = other.GetComponent<Skeleton> ();
-				animator.SetBool ("walking", false);
-				animator.SetBool ("attacking", true);
+			if (other.tag == "Player2Skeleton" && !attackingCastle && !attackingSkeleton) {
 
-			} else if(other.tag == "Player2Castle"){
-				attackingCastle = true;
-				animator.SetBool ("walking", false);
-				animator.SetBool ("attacking", true);
-			}
+                TryToStartAttackingSkeleton(other);
+				
+
+			} else if(other.tag == "Player2Castle" && !attackingCastle) {
+
+                StartAttackingCastle(other);
+
+            }
 		} else {
-			if (other.tag == "Player1Skeleton" && !attackingCastle) {
-				attackingSkeleton = true;
-				skeletonToAttack = other.GetComponent<Skeleton> ();
-				animator.SetBool ("walking", false);
-				animator.SetBool ("attacking", true);
+			if (other.tag == "Player1Skeleton" && !attackingCastle && !attackingSkeleton) {
 
-			} else if(other.tag == "Player1Castle"){
-				attackingCastle = true;
-				animator.SetBool ("walking", false);
-				animator.SetBool ("attacking", true);
-			}
+                TryToStartAttackingSkeleton(other);
+
+            } else if(other.tag == "Player1Castle" && !attackingCastle) {
+
+                StartAttackingCastle(other);
+
+            }
 		}
 
 			
 	}
+
+    void TryToStartAttackingSkeleton(Collider2D other) {
+
+        Skeleton target = other.GetComponent<Skeleton>();
+
+            attackingSkeleton = true;
+            skeletonToAttack = target;
+            animator.SetBool("walking", false);
+            animator.SetBool("attacking", true);
+    
+
+    }
+
+    void StartAttackingCastle(Collider2D other) {
+
+        attackingCastle = true;
+        animator.SetBool("walking", false);
+        animator.SetBool("attacking", true);
+
+    }
 
 	public void DoDamage(){
 

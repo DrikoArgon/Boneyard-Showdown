@@ -204,7 +204,10 @@ public class Player : MonoBehaviour {
 		}
 
 		if (currentLife <= 0 && !dead && !dying) {
-			dying = true;
+
+            ShakeCamera();
+
+            dying = true;
             animator.Play("Dying");
 			StartCoroutine (SpawnBones ());
 		}
@@ -345,8 +348,19 @@ public class Player : MonoBehaviour {
 
 	}
 
+    private void ShakeCamera() {
+        if (transform.name == "Player") {
+            CameraManager.instance.ShakePlayerCamera(0.1f, 3f, 0.5f, true);
+        } else {
+            CameraManager.instance.ShakePlayerCamera(0.1f, 3f, 0.5f, false);
+        }
+    }
+
 	private void ToggleInvinsibility(){
-		receivedDamage = false;
+
+        ShakeCamera();
+
+        receivedDamage = false;
 		lifeWhileInvulnerable = currentLife;
 		invulnerable = true;
 		invulnerableTimeStamp = Time.time + invulnerableSeconds;

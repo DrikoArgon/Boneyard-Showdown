@@ -105,6 +105,7 @@ MonoBehaviour:
   riseSound: {fileID: 8300000, guid: 01ee4aafcdeda49e5a44e365e5ab5d8a, type: 3}
   attackingCastleSound: {fileID: 8300000, guid: fd0e7a212d2cf49daa277b0c7dbef998,
     type: 3}
+  alreadyBeingAttacked: 0
 --- !u!50 &50140871425437736
 Rigidbody2D:
   serializedVersion: 4

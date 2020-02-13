@@ -7,14 +7,14 @@ public class MagicProjectile : MonoBehaviour {
 	public float projectileSpeed;
 	public float timeToDestroy;
 	public float magicDamage;
-	public PlayerWhoOwnsTheProgectile player;
+	public PlayerWhoOwnsTheProjectile player;
 	public AudioClip shootSound;
 
 
 	private AudioSource source;
 	private Player playerController;
 	private Direction directionToFire;
-	public enum PlayerWhoOwnsTheProgectile
+	public enum PlayerWhoOwnsTheProjectile
 	{
 		Player1,
 		Player2
@@ -27,7 +27,7 @@ public class MagicProjectile : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		if (player == PlayerWhoOwnsTheProgectile.Player1) {
+		if (player == PlayerWhoOwnsTheProjectile.Player1) {
 			playerController = GameObject.Find ("Player").GetComponent<Player> ();
 		} else {
 			playerController = GameObject.Find ("Player2").GetComponent<Player> ();
@@ -77,17 +77,27 @@ public class MagicProjectile : MonoBehaviour {
 			Enemy enemyVariables = other.GetComponent<Enemy> ();
 			enemyVariables.life -= magicDamage;
 			enemyVariables.receivedDamage = true;
-			Destroy (gameObject);
+
+            if (player == PlayerWhoOwnsTheProjectile.Player1) {
+                CameraManager.instance.ShakePlayerCamera(0.1f, 3f, 0.5f, true);
+            } else {
+                CameraManager.instance.ShakePlayerCamera(0.1f, 3f, 0.5f, false);
+            }
+
+
+            Destroy (gameObject);
+
 		}
 
-		if (player == PlayerWhoOwnsTheProgectile.Player1) {
+		if (player == PlayerWhoOwnsTheProjectile.Player1) {
 			if (other.tag == "Player2") {
 				Player enemyPlayer = other.GetComponent<Player> ();
 				if (!enemyPlayer.invulnerable) {
 					enemyPlayer.currentLife -= magicDamage;
 					enemyPlayer.receivedDamage = true;
 				}
-				Destroy (gameObject);
+
+                Destroy (gameObject);
 			}
 		} else {
 			if (other.tag == "Player1") {
@@ -96,7 +106,8 @@ public class MagicProjectile : MonoBehaviour {
 					enemyPlayer.currentLife -= magicDamage;
 					enemyPlayer.receivedDamage = true;
 				}
-				Destroy (gameObject);
+
+                Destroy (gameObject);
 			}
 		}
 
