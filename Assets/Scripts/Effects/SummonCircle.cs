@@ -71,7 +71,7 @@ public class SummonCircle : MonoBehaviour {
 
 	public void SummonSkeleton(){
 		playerInsideCircle.boneAmount -= boneAmountNeeded;
-		playerInsideCircle.currentExp += levelOfSkeletonCreated * 50;
+		playerInsideCircle.GrantExp(levelOfSkeletonCreated * 50);
 
 		if (playerInsideCircle.boneAmount < boneAmountNeeded) {
 			scrollOn.SetActive (false);

@@ -36,8 +36,7 @@ public class EnemyProjectile : MonoBehaviour
         if (other.tag == "Player1" || other.tag == "Player2") {
             Player playerVariables = other.GetComponent<Player>();
             if (!playerVariables.invulnerable) {
-                playerVariables.currentLife -= damage;
-                playerVariables.receivedDamage = true;
+                playerVariables.DoDamageToPlayer(damage);
             }
 
 

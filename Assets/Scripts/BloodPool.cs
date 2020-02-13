@@ -25,13 +25,9 @@ public class BloodPool : MonoBehaviour {
 		if (recoverTimeStamp < Time.time) {
 			if (insideCircle) {
 				
-				if (!playerInsideCircle.dead && (playerInsideCircle.currentLife < playerInsideCircle.maxLife)) {
+				if (!playerInsideCircle.dead && !playerInsideCircle.IsMaxLife()) {
 
-					playerInsideCircle.currentLife += 2;
-
-					if (playerInsideCircle.currentLife > playerInsideCircle.maxLife) {
-						playerInsideCircle.currentLife = playerInsideCircle.maxLife;
-					}
+                    playerInsideCircle.HealPlayer(2);
 
 					recoverTimeStamp = Time.time + recoverCooldown;
 

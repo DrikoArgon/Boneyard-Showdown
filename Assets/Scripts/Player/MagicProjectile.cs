@@ -33,7 +33,7 @@ public class MagicProjectile : MonoBehaviour {
 			playerController = GameObject.Find ("Player2").GetComponent<Player> ();
 		}
 
-		magicDamage = playerController.magicDamage;
+		magicDamage = playerController.GetMagicDamage();
 
 		if (playerController.direction == PlayerDirection.Up) {
 			directionToFire = Direction.Up;
@@ -55,7 +55,7 @@ public class MagicProjectile : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		magicDamage = playerController.magicDamage;
+		magicDamage = playerController.GetMagicDamage();
 
 		if (directionToFire == Direction.Up) {
 			GetComponent<Rigidbody2D> ().transform.position += Vector3.up * projectileSpeed * Time.deltaTime;
@@ -93,8 +93,7 @@ public class MagicProjectile : MonoBehaviour {
 			if (other.tag == "Player2") {
 				Player enemyPlayer = other.GetComponent<Player> ();
 				if (!enemyPlayer.invulnerable) {
-					enemyPlayer.currentLife -= magicDamage;
-					enemyPlayer.receivedDamage = true;
+					enemyPlayer.DoDamageToPlayer(magicDamage);
 				}
 
                 Destroy (gameObject);
@@ -103,8 +102,7 @@ public class MagicProjectile : MonoBehaviour {
 			if (other.tag == "Player1") {
 				Player enemyPlayer = other.GetComponent<Player> ();
 				if (!enemyPlayer.invulnerable) {
-					enemyPlayer.currentLife -= magicDamage;
-					enemyPlayer.receivedDamage = true;
+                    enemyPlayer.DoDamageToPlayer(magicDamage);
 				}
 
                 Destroy (gameObject);

@@ -6,64 +6,56 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour {
 
 	public static GameObject instance;
+
+    //UI
 	public GameObject boneCounter;
 	public GameObject mergedBoneCounter;
 	public Image returnText;
 	public Image mergedReturnText;
 	public Transform lifeBar;
 	public Transform expBar;
-	public GameObject levelUpEffectPrefab;
-	public Transform levelUpEffectSpawner;
-	public SpriteRenderer levelDisplayer;
-	public Sprite lvl2Sprite;
-	public Sprite lvl3Sprite;
-	public Sprite lvl4Sprite;
-	public Sprite lvl5Sprite;
-	public GameObject collectibleBonePrefab;
 
-	public GameObject magicProjectilePrefab;
-	public GameObject knifePrefab;
+    //Level up
+    private PlayerLevelManager levelManager;
+
+    public GameObject collectibleBonePrefab;
+
+	private GameObject magicProjectilePrefab;
+	private GameObject meleeAttackPrefab;
 
 	//Firing points
 	public Transform upFiringPoint; 
 	public Transform rightFiringPoint; 
-	public Transform downFiringPoint; 
+	public Transform downFiringPoint;
 
-	//Stats variables
-	public float speed;
-	public float maxLife;
-	private float lifeWhileInvulnerable;
-	public float currentLife;
-    public float currentExp;
-    public float expNeededToNextLevel;
-    public float magicDamage;
-    public float stabDamage;
+    //Stats variables
+    public CharacterBaseStats baseStats;
+    public CharacterStats characterStats;
+
+    private float speed;
+    private float maxLife;
+    private float magicDamage;
+    private float stabDamage;
+
+    private float currentLife;
+    private float lifeWhileInvulnerable;
 
     public int boneAmount;
-	public int level;
-	public int maxLevel;
 
-
-	//Controls
-	public KeyCode moveUpKey;
-	public KeyCode moveRightKey;
-	public KeyCode moveLeftKey;
-	public KeyCode moveDownKey;
-	public KeyCode shootKey;
-	public KeyCode stabKey;
-
-	public string moveHorizontalGamepadAxis;
-	public string moveVerticalGamepadAxis;
-	public string shootMagicGamepadButton;
-	public string stabGamepadButton;
+    //Controls
+    public PlayerInput inputMappings;
 
 	//Player Direction
 	public PlayerDirection direction;
 	public PlayerDirection inicialDirection;
 
 	//Cooldowns
-	public float shotCooldownInSeconds;
-	public float knifeCooldownInSeconds;
+	private float rangedAttackCooldown;
+    private float meleeAttackCooldown;
+
+    private float meleeAttackTimer;
+    private float rangedAttackTimer;
+
 	public float invulnerableSeconds;
 
 	private float shotTimeStamp;
@@ -73,11 +65,15 @@ public class Player : MonoBehaviour {
     //States
     private bool moving;
 	private bool attacking;
+    private bool isMeleeAttackOnCooldown;
+    private bool isRangedAttackOnCooldown;
+
 	public bool receivedDamage;
 	public bool invulnerable;
 	public bool dead;
 	public bool dying;
 	public bool levelingUp;
+
 
 	private Animator animator;
     private Rigidbody2D myRigidBody;
@@ -104,24 +100,44 @@ public class Player : MonoBehaviour {
 
 		shotTimeStamp = 0;
 		knifeTimeStamp = 0;
-		attacking = false;
-		receivedDamage = false;
-		invulnerable = false;
-		levelingUp = false;
+
 		direction = inicialDirection;
+
 		boneCounterText = boneCounter.GetComponent<Text> ();
 		mergedBoneCounterText = mergedBoneCounter.GetComponent<Text> ();
-		invulnerableTimeStamp = 0;
-		currentLife = maxLife;
-		currentExp = 0;
-		expNeededToNextLevel = 200;
 
-		magicDamage = 1;
-		stabDamage = 2;
-	}
+		invulnerableTimeStamp = 0;
+
+        maxLife = baseStats.maxLife;
+        speed = baseStats.speed;
+        magicDamage = baseStats.initialMagicDamage;
+        stabDamage = baseStats.initialMeleeDamage;
+
+        meleeAttackCooldown = baseStats.meleeAttackCooldown;
+        rangedAttackCooldown = baseStats.rangedAttackCooldown;
+
+        currentLife = maxLife;
+
+        levelManager = GetComponent<PlayerLevelManager>();
+
+        magicProjectilePrefab = characterStats.projectilePrefab;
+        meleeAttackPrefab = characterStats.meleeAttackPrefab;
+
+        if(transform.name == "Player") {
+            meleeAttackPrefab.GetComponent<MeleeAttack>().player = MeleeAttack.PlayerWhoOwnsTheKnife.Player1;
+            magicProjectilePrefab.GetComponent<MagicProjectile>().player = MagicProjectile.PlayerWhoOwnsTheProjectile.Player1;
+        } else {
+            meleeAttackPrefab.GetComponent<MeleeAttack>().player = MeleeAttack.PlayerWhoOwnsTheKnife.Player2;
+            magicProjectilePrefab.GetComponent<MagicProjectile>().player = MagicProjectile.PlayerWhoOwnsTheProjectile.Player2;
+        }
+        
+
+    }
 
     private void Update() {
-        
+
+        CheckForCooldowns();
+
     }
 
     // Update is called once per frame
@@ -140,45 +156,15 @@ public class Player : MonoBehaviour {
 			mySpriteRenderer.enabled = true;
 
 			//Magic logic
-			if ((Input.GetKeyDown (shootKey) || Input.GetButtonDown(shootMagicGamepadButton)) && !dying && !dead) {
+			if ((Input.GetKeyDown (inputMappings.shootKey) || Input.GetButtonDown(inputMappings.shootMagicGamepadButton)) && !dying && !dead) {
 
-				if (shotTimeStamp <= Time.time) {
-				
-					if (direction == PlayerDirection.Up) {
-						Instantiate (magicProjectilePrefab, upFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 90)));
-					} else if (direction == PlayerDirection.Right) {
-						Instantiate (magicProjectilePrefab, rightFiringPoint.position, Quaternion.identity);
-					} else if (direction == PlayerDirection.Left) {
-						Instantiate (magicProjectilePrefab, rightFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 180)));
-					} else {
-						Instantiate (magicProjectilePrefab, downFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 270)));
-					}
-
-					shotTimeStamp = Time.time + shotCooldownInSeconds;
-
-				}
+                DoRangedAttack();
 			}
 
 			//Attacking logic
-			if ((Input.GetKeyDown (stabKey) || Input.GetButtonDown(stabGamepadButton)) && !dying && !dead) {
+			if ((Input.GetKeyDown (inputMappings.stabKey) || Input.GetButtonDown(inputMappings.stabGamepadButton)) && !dying && !dead) {
 
-				if (knifeTimeStamp <= Time.time) {
-
-					if (direction == PlayerDirection.Up) {
-						Instantiate (knifePrefab, upFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 90)));
-					} else if (direction == PlayerDirection.Right) {
-						Instantiate (knifePrefab, rightFiringPoint.position, Quaternion.identity);
-					} else if (direction == PlayerDirection.Left) {
-						Instantiate (knifePrefab, rightFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 180)));
-					} else {
-						Instantiate (knifePrefab, downFiringPoint.position, Quaternion.Euler (new Vector3 (0, 0, 270)));
-					}
-
-					attacking = true;
-
-					knifeTimeStamp = Time.time + knifeCooldownInSeconds;
-
-				}
+                DoMeleeAttack();
 			}
 
 		} 
@@ -215,17 +201,13 @@ public class Player : MonoBehaviour {
 		boneCounterText.text = boneAmount.ToString ();
 		mergedBoneCounterText.text = boneAmount.ToString ();
 
-		if (level < maxLevel) {
+        if (!levelManager.IsMaxLevel()) {
+            expBar.localScale = new Vector3(levelManager.GetCurrentExp() / levelManager.GetExpNeededForNextLevel(), 1, 1);
+        }
+        
 
-			expBar.localScale = new Vector3(currentExp / expNeededToNextLevel,1,1);
 
-			if (currentExp >= expNeededToNextLevel && !levelingUp) {
-				LevelUp ();
-			}
-		}
-		
-			
-	}
+    }
 
     void CheckStatusForAnimation() {
         if (!dying && !dead) {
@@ -233,14 +215,77 @@ public class Player : MonoBehaviour {
         }
     }
 
+    void DoMeleeAttack() {
+
+        if (!isMeleeAttackOnCooldown && !attacking) {
+
+            if (direction == PlayerDirection.Up) {
+                Instantiate(meleeAttackPrefab, upFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 90)));
+            } else if (direction == PlayerDirection.Right) {
+                Instantiate(meleeAttackPrefab, rightFiringPoint.position, Quaternion.identity);
+            } else if (direction == PlayerDirection.Left) {
+                Instantiate(meleeAttackPrefab, rightFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 180)));
+            } else {
+                Instantiate(meleeAttackPrefab, downFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 270)));
+            }
+
+            attacking = true;
+            isMeleeAttackOnCooldown = true;
+        }
+       
+    }
+
+    void DoRangedAttack() {
+
+        if (!isRangedAttackOnCooldown && !attacking) {
+
+            if (direction == PlayerDirection.Up) {
+                Instantiate(magicProjectilePrefab, upFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 90)));
+            } else if (direction == PlayerDirection.Right) {
+                Instantiate(magicProjectilePrefab, rightFiringPoint.position, Quaternion.identity);
+            } else if (direction == PlayerDirection.Left) {
+                Instantiate(magicProjectilePrefab, rightFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 180)));
+            } else {
+                Instantiate(magicProjectilePrefab, downFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 270)));
+            }
+
+            attacking = true;
+            isRangedAttackOnCooldown = true;
+        }
+    }
+
+    void CheckForCooldowns() {
+
+        if (isMeleeAttackOnCooldown) {
+
+            meleeAttackTimer += Time.deltaTime;
+
+            if (meleeAttackTimer > meleeAttackCooldown) {
+                meleeAttackTimer = 0;
+                isMeleeAttackOnCooldown = false;
+            }
+        }
+
+        if (isRangedAttackOnCooldown) {
+
+            rangedAttackTimer += Time.deltaTime;
+
+            if (rangedAttackTimer > rangedAttackCooldown) {
+                rangedAttackTimer = 0;
+                isRangedAttackOnCooldown = false;
+            }
+        }
+
+    }
+
     public void Move() {
-        if (Input.GetKey(moveUpKey) || (Input.GetAxis(moveVerticalGamepadAxis) >= 0.5f)) {
+        if (Input.GetKey(inputMappings.moveUpKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) >= 0.5f)) {
             MoveUp();
-        } else if (Input.GetKey(moveRightKey) || (Input.GetAxis(moveHorizontalGamepadAxis) >= 0.5f)) {
+        } else if (Input.GetKey(inputMappings.moveRightKey) || (Input.GetAxis(inputMappings.moveHorizontalGamepadAxis) >= 0.5f)) {
             MoveRight();
-        } else if (Input.GetKey(moveLeftKey) || (Input.GetAxis(moveHorizontalGamepadAxis) <= -0.5f)) {
+        } else if (Input.GetKey(inputMappings.moveLeftKey) || (Input.GetAxis(inputMappings.moveHorizontalGamepadAxis) <= -0.5f)) {
             MoveLeft();
-        } else if (Input.GetKey(moveDownKey) || (Input.GetAxis(moveVerticalGamepadAxis) <= -0.5f)) {
+        } else if (Input.GetKey(inputMappings.moveDownKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) <= -0.5f)) {
             MoveDown();
         }
 
@@ -289,35 +334,6 @@ public class Player : MonoBehaviour {
         animator.SetFloat("VerticalMovement", 0f);
         direction = PlayerDirection.Left;
     }
-
-	public void LevelUp(){
-
-		levelingUp = true;
-		Instantiate (levelUpEffectPrefab, levelUpEffectSpawner.transform.position, Quaternion.identity);
-		level += 1;
-		stabDamage += 1.5f;
-		magicDamage += 1;
-		maxLife += 1;
-		currentLife = maxLife;
-		currentExp -= expNeededToNextLevel;
-		expNeededToNextLevel = expNeededToNextLevel * 2;
-
-		if (level == 2) {
-			levelDisplayer.sprite = lvl2Sprite;
-		} else if (level == 3) {
-			levelDisplayer.sprite = lvl3Sprite;
-		} else if (level == 4) {
-			levelDisplayer.sprite = lvl4Sprite;
-		} else if (level == 5) {
-			levelDisplayer.sprite = lvl5Sprite;
-		}
-
-		if (currentExp >= expNeededToNextLevel) {
-			LevelUp ();
-		} else {
-			levelingUp = false;
-		}
-	}
 
 	public void TeleportToPosition(Vector3 pos){
 
@@ -387,7 +403,64 @@ public class Player : MonoBehaviour {
 		mergedReturnText.enabled = false;
 	}
 
-	IEnumerator SpawnBones(){
+    public void DoDamageToPlayer(float damage) {
+        currentLife -= damage;
+        receivedDamage = true;
+    }
+
+    public bool IsMaxLife() {
+        if (currentLife < maxLife) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void HealPlayer(float amount) {
+
+        if(amount < 0) {
+            return;
+        }
+
+        float newAmount = currentLife + amount;
+
+        if(newAmount > maxLife) {
+            newAmount = maxLife;
+        }
+
+        currentLife = newAmount;
+
+    }
+
+    public void HealPlayerCompletely() {
+        currentLife = maxLife;
+    }
+
+    public void IncreaseMeleeDamage(float amount) {
+        stabDamage += amount;
+    }
+
+    public void IncreaseRangedDamage(float amount) {
+        magicDamage += amount;
+    }
+
+    public void IncreasePlayerMaxHealth(float amount) {
+        maxLife += amount;
+    }
+
+    public void GrantExp(float exp) {
+        levelManager.GrantExp(exp);
+    }
+
+    public float GetMeleeDamage() {
+        return stabDamage; 
+    }
+
+    public float GetMagicDamage() {
+        return magicDamage;
+    }
+
+    IEnumerator SpawnBones(){
 
 		int bonesToLose = boneAmount / 2;
 

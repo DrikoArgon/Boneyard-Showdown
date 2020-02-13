@@ -25,8 +25,7 @@ public class BanditSlash : MonoBehaviour {
 		if (other.tag == "Player1" || other.tag == "Player2") {
 			Player playerVariables = other.GetComponent<Player> ();
 			if (!playerVariables.invulnerable) {
-				playerVariables.currentLife -= banditDamage;
-				playerVariables.receivedDamage = true;
+                playerVariables.DoDamageToPlayer(banditDamage);
 			}
 				
 		}
