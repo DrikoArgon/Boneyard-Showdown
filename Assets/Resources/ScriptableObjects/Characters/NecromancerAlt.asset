@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 921317e818453c644a4c7ec0da8ec1f9, type: 3}
-  m_Name: Necromancer
+  m_Name: NecromancerAlt
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 1535395268544890, guid: 7a4a5c5956d9148d5bdad665827af077,
     type: 3}
@@ -20,4 +20,4 @@ MonoBehaviour:
     type: 3}
   meleeAttackPrefabPlayer2: {fileID: 7460519966587513965, guid: b4a68ec58b1b37845b87a66666a1b3eb,
     type: 3}
-  animatorController: {fileID: 9100000, guid: 2d32c46723d6c4a52b3cb48ee28957ad, type: 2}
+  animatorController: {fileID: 9100000, guid: 710ab7f3537ad4d0ea3a084efb4573ac, type: 2}

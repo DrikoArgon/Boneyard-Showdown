@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 95281880961794928}
   - component: {fileID: 82467256038775422}
   m_Layer: 0
-  m_Name: Player1Knife
+  m_Name: NecromancerKnife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdec0804a478644d39d5f4c15ac2e495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: 1
+  player: 0
   stabDamage: 2
 --- !u!50 &50196138052055732
 Rigidbody2D:

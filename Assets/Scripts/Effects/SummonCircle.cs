@@ -48,7 +48,7 @@ public class SummonCircle : MonoBehaviour {
 
 			insideCircle = true;
 
-			if (playerInsideCircle.boneAmount >= boneAmountNeeded && !playerInsideCircle.dead) {
+			if (playerInsideCircle.GetBoneAmount() >= boneAmountNeeded && !playerInsideCircle.dead) {
 				scrollOn.SetActive (true);
 				backSummonEffect.enabled = true;
 				frontSummonEffect.enabled = true;
@@ -70,10 +70,10 @@ public class SummonCircle : MonoBehaviour {
 	}
 
 	public void SummonSkeleton(){
-		playerInsideCircle.boneAmount -= boneAmountNeeded;
+		playerInsideCircle.DecreaseBoneAmount(boneAmountNeeded);
 		playerInsideCircle.GrantExp(levelOfSkeletonCreated * 50);
 
-		if (playerInsideCircle.boneAmount < boneAmountNeeded) {
+		if (playerInsideCircle.GetBoneAmount() < boneAmountNeeded) {
 			scrollOn.SetActive (false);
 			backSummonEffect.enabled = false;
 			frontSummonEffect.enabled = false;

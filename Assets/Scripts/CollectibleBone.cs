@@ -55,7 +55,7 @@ public class CollectibleBone : MonoBehaviour {
 			Player playerVariables = other.GetComponent<Player> ();
 			if (!playerVariables.dead && !playerVariables.dying) {
 				
-				playerVariables.boneAmount += 1;
+				playerVariables.IncreaseBoneAmount(1);
 
 				audioManager.PlayCollectBoneSound ();
 

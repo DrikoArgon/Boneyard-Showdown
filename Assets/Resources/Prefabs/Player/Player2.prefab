@@ -125,31 +125,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795dd1329cac54002a39a1b0b6d2381c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  representsPlayer: 1
   boneCounter: {fileID: 0}
   mergedBoneCounter: {fileID: 0}
   returnText: {fileID: 0}
   mergedReturnText: {fileID: 0}
   lifeBar: {fileID: 4194013898501026}
   expBar: {fileID: 4279818033038248}
-  levelUpEffectPrefab: {fileID: 1861995304763082, guid: ebc5fdcf17a814b048c80c293f40d001,
-    type: 3}
-  levelUpEffectSpawner: {fileID: 4069990760772376}
-  levelDisplayer: {fileID: 212482305539734974}
-  lvl2Sprite: {fileID: 21300000, guid: 078394547cc8144a4a32b090e9dd64db, type: 3}
-  lvl3Sprite: {fileID: 21300000, guid: 08b18e09ff92d4bb5917f67f84901cc5, type: 3}
-  lvl4Sprite: {fileID: 21300000, guid: cb12cb39041744b2b8c1637a92f86d7d, type: 3}
-  lvl5Sprite: {fileID: 21300000, guid: 67b34655861484f4aba4c009259308a4, type: 3}
   collectibleBonePrefab: {fileID: 1436358443323690, guid: c5ce53ca338324004884167c12c0313f,
-    type: 3}
-  magicProjectilePrefab: {fileID: 1903112352941714, guid: 95ab4153daf654385bcd65422bb2246c,
-    type: 3}
-  knifePrefab: {fileID: 1924807431052494, guid: 1cfc726d0f5974fefbacfabc86317b2f,
     type: 3}
   upFiringPoint: {fileID: 4433538680206524}
   rightFiringPoint: {fileID: 4877160541398536}
   downFiringPoint: {fileID: 4193383354775348}
   baseStats: {fileID: 11400000, guid: 51698e3753c70d04ba46cd8810959bbb, type: 2}
-  characterStats: {fileID: 0}
+  characterStats: {fileID: 11400000, guid: f2444be48a8a095488be5112031ef136, type: 2}
   boneAmount: 0
   inputMappings: {fileID: 11400000, guid: f43fcef0703c77540bff80e261ad91f7, type: 2}
   direction: 3
@@ -159,7 +148,6 @@ MonoBehaviour:
   invulnerable: 0
   dead: 0
   dying: 0
-  levelingUp: 0
   flashDelay: 2
 --- !u!61 &61753388993967886
 BoxCollider2D:

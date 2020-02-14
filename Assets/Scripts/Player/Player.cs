@@ -7,6 +7,13 @@ public class Player : MonoBehaviour {
 
 	public static GameObject instance;
 
+    public enum RepresentsPlayer {
+        Player1,
+        Player2
+    }
+
+    public RepresentsPlayer representsPlayer;
+
     //UI
 	public GameObject boneCounter;
 	public GameObject mergedBoneCounter;
@@ -40,7 +47,7 @@ public class Player : MonoBehaviour {
     private float currentLife;
     private float lifeWhileInvulnerable;
 
-    public int boneAmount;
+    private int boneAmount;
 
     //Controls
     public PlayerInput inputMappings;
@@ -58,8 +65,8 @@ public class Player : MonoBehaviour {
 
 	public float invulnerableSeconds;
 
-	private float shotTimeStamp;
-	private float knifeTimeStamp;
+    private float timeToMoveAfterAttack = 0.5f;
+    private float elapsedTime;
 	private float invulnerableTimeStamp;
 
     //States
@@ -72,8 +79,6 @@ public class Player : MonoBehaviour {
 	public bool invulnerable;
 	public bool dead;
 	public bool dying;
-	public bool levelingUp;
-
 
 	private Animator animator;
     private Rigidbody2D myRigidBody;
@@ -98,9 +103,6 @@ public class Player : MonoBehaviour {
     void Start () {
 		instance = this.gameObject;
 
-		shotTimeStamp = 0;
-		knifeTimeStamp = 0;
-
 		direction = inicialDirection;
 
 		boneCounterText = boneCounter.GetComponent<Text> ();
@@ -120,15 +122,17 @@ public class Player : MonoBehaviour {
 
         levelManager = GetComponent<PlayerLevelManager>();
 
-        magicProjectilePrefab = characterStats.projectilePrefab;
-        meleeAttackPrefab = characterStats.meleeAttackPrefab;
+        
+        
 
-        if(transform.name == "Player") {
-            meleeAttackPrefab.GetComponent<MeleeAttack>().player = MeleeAttack.PlayerWhoOwnsTheKnife.Player1;
-            magicProjectilePrefab.GetComponent<MagicProjectile>().player = MagicProjectile.PlayerWhoOwnsTheProjectile.Player1;
+        animator.runtimeAnimatorController = characterStats.animatorController;
+
+        if(representsPlayer == RepresentsPlayer.Player1) {
+            magicProjectilePrefab = characterStats.projectilePrefab;
+            meleeAttackPrefab = characterStats.meleeAttackPrefab;
         } else {
-            meleeAttackPrefab.GetComponent<MeleeAttack>().player = MeleeAttack.PlayerWhoOwnsTheKnife.Player2;
-            magicProjectilePrefab.GetComponent<MagicProjectile>().player = MagicProjectile.PlayerWhoOwnsTheProjectile.Player2;
+            magicProjectilePrefab = characterStats.projectilePrefabPlayer2;
+            meleeAttackPrefab = characterStats.meleeAttackPrefabPlayer2;
         }
         
 
@@ -137,7 +141,7 @@ public class Player : MonoBehaviour {
     private void Update() {
 
         CheckForCooldowns();
-
+        CheckForAttackingStasis();
     }
 
     // Update is called once per frame
@@ -148,7 +152,6 @@ public class Player : MonoBehaviour {
             Move();
 
 		}
-
 
 		if (invulnerableTimeStamp < Time.time) {
 
@@ -174,11 +177,7 @@ public class Player : MonoBehaviour {
 			lifeWhileInvulnerable = currentLife;
 		}
 
-
-		if (knifeTimeStamp <= Time.time) {
-			attacking = false;
-		}
-
+        	
 		if (receivedDamage && currentLife > 0) {
 			ToggleInvinsibility ();
 		}
@@ -276,6 +275,18 @@ public class Player : MonoBehaviour {
             }
         }
 
+    }
+
+    void CheckForAttackingStasis() {
+        if (attacking) {
+
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime > timeToMoveAfterAttack) {
+                elapsedTime = 0;
+                attacking = false;
+            }
+        }
     }
 
     public void Move() {
@@ -446,6 +457,18 @@ public class Player : MonoBehaviour {
 
     public void IncreasePlayerMaxHealth(float amount) {
         maxLife += amount;
+    }
+
+    public void IncreaseBoneAmount(int amount) {
+        boneAmount += amount;
+    }
+
+    public void DecreaseBoneAmount(int amount) {
+        boneAmount -= amount;
+    }
+
+    public int GetBoneAmount() {
+        return boneAmount;
     }
 
     public void GrantExp(float exp) {
