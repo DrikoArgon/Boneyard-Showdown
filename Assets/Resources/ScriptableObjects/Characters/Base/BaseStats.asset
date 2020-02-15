@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2.5
   maxLife: 4
-  initialMagicDamage: 0
-  initialMeleeDamage: 0
+  initialMagicDamage: 1
+  initialMeleeDamage: 1.5
   rangedAttackCooldown: 1.5
   meleeAttackCooldown: 0.6
   baseRangedDamageModifier: 1

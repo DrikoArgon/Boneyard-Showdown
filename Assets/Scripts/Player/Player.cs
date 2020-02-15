@@ -71,6 +71,7 @@ public class Player : MonoBehaviour {
 	private float invulnerableTimeStamp;
 
     //States
+    private Vector3 moveDirection;
     private bool moving;
 	private bool attacking;
     private bool isMeleeAttackOnCooldown;
@@ -142,7 +143,6 @@ public class Player : MonoBehaviour {
 
         if (representsPlayer == RepresentsPlayer.Player1) {
             
-
             characterStats = (CharacterStats)Instantiate(Resources.Load("ScriptableObjects/Characters/" + GameManager.instance.player1ChosenCharacter.ToString()));
 
         } else {
@@ -158,6 +158,7 @@ public class Player : MonoBehaviour {
 
     private void Update() {
 
+        CollectMoveInputs();
         CheckForCooldowns();
         CheckForAttackingStasis();
     }
@@ -307,7 +308,56 @@ public class Player : MonoBehaviour {
         }
     }
 
+    void CollectMoveInputs() {
+
+        if (Input.GetKey(inputMappings.moveUpKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) >= 0.5f)) {
+            moveDirection.y = 1;
+        } else if (Input.GetKey(inputMappings.moveDownKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) <= -0.5f)) {
+            moveDirection.y = -1;
+        } else {
+            moveDirection.y = 0;
+        }
+
+        if (Input.GetKey(inputMappings.moveRightKey) || (Input.GetAxis(inputMappings.moveHorizontalGamepadAxis) >= 0.5f)) {
+            moveDirection.x = 1;
+        } else if (Input.GetKey(inputMappings.moveLeftKey) || (Input.GetAxis(inputMappings.moveHorizontalGamepadAxis) <= -0.5f)) {
+            moveDirection.x = -1;
+        } else {
+            moveDirection.x = 0;
+        }
+
+
+    }
+
     public void Move() {
+
+        if(moveDirection.x != 0 && moveDirection.y != 0) {
+            myRigidBody.transform.position += moveDirection * ( speed / 1.4f ) * Time.deltaTime;
+        } else {
+            myRigidBody.transform.position += moveDirection * speed * Time.deltaTime;
+        }
+
+        if(moveDirection.x > 0) {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1, 1);
+            lifeBar.parent.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1, 1);
+        } else if(moveDirection.x < 0) {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, 1, 1);
+            lifeBar.parent.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, 1, 1);
+        }
+
+        if(moveDirection.x != 0 || moveDirection.y != 0) {
+            if(moveDirection.x != 0) {
+                animator.SetFloat("HorizontalMovement", Mathf.Abs(moveDirection.x));
+                animator.SetFloat("VerticalMovement", 0f);
+            } else {
+                animator.SetFloat("HorizontalMovement", Mathf.Abs(moveDirection.x));
+                animator.SetFloat("VerticalMovement", moveDirection.y);
+            }          
+        }
+
+
+
+        /*
         if (Input.GetKey(inputMappings.moveUpKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) >= 0.5f)) {
             MoveUp();
         } else if (Input.GetKey(inputMappings.moveRightKey) || (Input.GetAxis(inputMappings.moveHorizontalGamepadAxis) >= 0.5f)) {
@@ -317,7 +367,7 @@ public class Player : MonoBehaviour {
         } else if (Input.GetKey(inputMappings.moveDownKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) <= -0.5f)) {
             MoveDown();
         }
-
+        */
     }
 
     public void MoveUp(){
