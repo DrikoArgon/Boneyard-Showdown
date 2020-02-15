@@ -4,7 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum ChosenCharacter {
+    Necromancer,
+    NecromancerAlt
+}
+
 public class GameManager : MonoBehaviour {
+
+    public static GameManager instance;
 
 	public int player1CastleLife;
 	public int player2CastleLife;
@@ -26,8 +33,20 @@ public class GameManager : MonoBehaviour {
 
 	private bool paused;
 
-	// Use this for initialization
-	void Start () {
+    public ChosenCharacter player1ChosenCharacter;
+    public ChosenCharacter player2ChosenCharacter;
+
+    private void Awake() {
+        if(instance == null) {
+            instance = this;
+            DontDestroyOnLoad(this);
+        } else {
+            Destroy(this);
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
 
 		paused = false;
 		player1CastleUnderAttack = false;
@@ -42,6 +61,14 @@ public class GameManager : MonoBehaviour {
 		mergedPlayer2CastleLifeCounter.text = inicialCastleLife.ToString();
 		
 	}
+    
+    public void SetChosenCharacter(bool isPlayer1, ChosenCharacter chosenCharacter) {
+        if (isPlayer1) {
+            player1ChosenCharacter = chosenCharacter;
+        } else {
+            player2ChosenCharacter = chosenCharacter;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {

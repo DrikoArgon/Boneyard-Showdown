@@ -7,6 +7,7 @@ public class SummonCircle : MonoBehaviour {
 	public Transform skeletonSpawnPointTransform;
 	public Transform towerSkeletonSpawnPoint;
 	public GameObject scrollOn;
+    public GameObject scrollOff;
 	public SpriteRenderer backSummonEffect;
 	public SpriteRenderer frontSummonEffect;
 	public int boneAmountNeeded;
@@ -68,6 +69,11 @@ public class SummonCircle : MonoBehaviour {
 		}
 
 	}
+
+    public void SetupScrollSprites(Sprite offSprite, Sprite onSprite) {
+        scrollOff.GetComponent<SpriteRenderer>().sprite = offSprite;
+        scrollOn.GetComponent<SpriteRenderer>().sprite = onSprite;
+    }
 
 	public void SummonSkeleton(){
 		playerInsideCircle.DecreaseBoneAmount(boneAmountNeeded);

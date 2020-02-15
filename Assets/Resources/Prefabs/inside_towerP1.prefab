@@ -737,6 +737,7 @@ MonoBehaviour:
   skeletonSpawnPointTransform: {fileID: 0}
   towerSkeletonSpawnPoint: {fileID: 4617552210858028}
   scrollOn: {fileID: 1289103609604338}
+  scrollOff: {fileID: 1713971581753800}
   backSummonEffect: {fileID: 212145365107112408}
   frontSummonEffect: {fileID: 212732578463760708}
   boneAmountNeeded: 4
@@ -1591,6 +1592,7 @@ MonoBehaviour:
   skeletonSpawnPointTransform: {fileID: 0}
   towerSkeletonSpawnPoint: {fileID: 4617552210858028}
   scrollOn: {fileID: 1720203430414888}
+  scrollOff: {fileID: 1898192629679842}
   backSummonEffect: {fileID: 212446691169588048}
   frontSummonEffect: {fileID: 212073628682516546}
   boneAmountNeeded: 16
@@ -1706,6 +1708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4743168488175988}
   - component: {fileID: 212969632081822544}
+  - component: {fileID: 5675825916523244164}
   m_Layer: 0
   m_Name: inside_towerP1
   m_TagString: Untagged
@@ -1805,6 +1808,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5675825916523244164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730850033106200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1282883318c1404baa60d69bd6b3017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  castleInfo: {fileID: 0}
+  lowLevelScroll: {fileID: 114581364444821754}
+  midLevelScroll: {fileID: 114457615779410946}
+  highLevelScroll: {fileID: 114416904103173688}
+  belongsToPlayer: 0
 --- !u!1 &1785013787371004
 GameObject:
   m_ObjectHideFlags: 0
@@ -2450,6 +2470,7 @@ MonoBehaviour:
   skeletonSpawnPointTransform: {fileID: 0}
   towerSkeletonSpawnPoint: {fileID: 4617552210858028}
   scrollOn: {fileID: 1813057619380758}
+  scrollOff: {fileID: 1615004329920094}
   backSummonEffect: {fileID: 212633797079033686}
   frontSummonEffect: {fileID: 212254871089209814}
   boneAmountNeeded: 8

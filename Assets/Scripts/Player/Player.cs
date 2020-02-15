@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -122,8 +123,7 @@ public class Player : MonoBehaviour {
 
         levelManager = GetComponent<PlayerLevelManager>();
 
-        
-        
+        DefineCharacterStats();
 
         animator.runtimeAnimatorController = characterStats.animatorController;
 
@@ -135,6 +135,24 @@ public class Player : MonoBehaviour {
             meleeAttackPrefab = characterStats.meleeAttackPrefabPlayer2;
         }
         
+
+    }
+
+    private void DefineCharacterStats() {
+
+        if (representsPlayer == RepresentsPlayer.Player1) {
+            
+
+            characterStats = (CharacterStats)Instantiate(Resources.Load("ScriptableObjects/Characters/" + GameManager.instance.player1ChosenCharacter.ToString()));
+
+        } else {
+
+            characterStats = (CharacterStats)Instantiate(Resources.Load("ScriptableObjects/Characters/" + GameManager.instance.player2ChosenCharacter.ToString()));
+
+            magicProjectilePrefab = characterStats.projectilePrefabPlayer2;
+            meleeAttackPrefab = characterStats.meleeAttackPrefabPlayer2;
+        }
+
 
     }
 
