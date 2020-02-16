@@ -53,8 +53,14 @@ TagManager:
   - name: Background
     uniqueID: 2364214781
     locked: 0
+  - name: LowBackground
+    uniqueID: 4084921843
+    locked: 0
   - name: Middle
     uniqueID: 4003737515
+    locked: 0
+  - name: HighBackground
+    uniqueID: 766195953
     locked: 0
   - name: UI
     uniqueID: 728178459
