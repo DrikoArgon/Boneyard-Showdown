@@ -53,7 +53,9 @@ public class Bandit : MeleeEnemy {
 
         CheckDamageReceived();
 
-        DefineDirectionToLook();
+        DefineAnimationDirection();
+
+        //DefineDirectionToLook();
 
         CheckStatusForAnimation();
     }
@@ -79,7 +81,6 @@ public class Bandit : MeleeEnemy {
 
                 /*enemyDirection = chasehandler.ChaseMelee(detectionSystem.GetCurrentTarget());*/
 
-                walking = true;
                 //------------------------------------------------------------------------	
             }
             

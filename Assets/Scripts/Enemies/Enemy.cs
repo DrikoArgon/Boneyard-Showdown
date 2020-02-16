@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public enum EnemyDirection {
     Up,
@@ -39,6 +40,7 @@ public class Enemy : MonoBehaviour {
 	protected bool attacking;
 	protected bool dying;
     protected bool walking;
+    public AIPath aiPath;
 
 	protected float invulnerableTimeStamp;
 
@@ -48,6 +50,7 @@ public class Enemy : MonoBehaviour {
         animator = GetComponent<Animator>();
         myRigidBody = GetComponent<Rigidbody2D>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+        //aiPath.GetComponent<AIPath>();
 
     }
 
@@ -188,6 +191,34 @@ public class Enemy : MonoBehaviour {
         }
 
         DefineDirection();
+
+    }
+
+    protected void DefineAnimationDirection() {
+
+        if (aiPath.desiredVelocity.x > 0) {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1, 1);
+        } else if (aiPath.desiredVelocity.x < 0) {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, 1, 1);
+        }
+
+        if (aiPath.desiredVelocity.x != 0 || aiPath.desiredVelocity.y != 0) {
+            if (aiPath.desiredVelocity.x != 0) {
+                animator.SetFloat("HorizontalMovement", 1f);
+                animator.SetFloat("VerticalMovement", 0f);
+            } else {
+                animator.SetFloat("HorizontalMovement", 0f);
+                if(aiPath.desiredVelocity.y > 0) {
+                    animator.SetFloat("VerticalMovement", 1f);
+                } else {
+                    animator.SetFloat("VerticalMovement", -1f);
+                }                
+            }
+
+            walking = true;
+        } else {
+            walking = false;
+        }
 
     }
 
