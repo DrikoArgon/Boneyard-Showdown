@@ -44,6 +44,9 @@ public class Bandit : MeleeEnemy {
 
         if (!detectionSystem.IsTargetDetected()) {
             enemyDirection = wanderHandler.RandomWander();
+            chasehandler.StopChasing();
+        } else {
+            chasehandler.SetTarget(detectionSystem.GetCurrentTarget());
         }
 
         CheckInvinsibility();
@@ -61,27 +64,27 @@ public class Bandit : MeleeEnemy {
         if (dying) {
             return;
         }
-
+        
         if (!detectionSystem.IsTargetDetected()) {
 
             //Random movement -------------------------------------------------
 
-            BasicMovement();
+            //BasicMovement();
 			//----------------------------------------------------------------------
 
 		} else {
-
+            
 			if(!attacking){
 				//Chasing Target --------------------------------------------------------
 
-                enemyDirection = chasehandler.ChaseMelee(detectionSystem.GetCurrentTarget());
+                /*enemyDirection = chasehandler.ChaseMelee(detectionSystem.GetCurrentTarget());*/
 
                 walking = true;
                 //------------------------------------------------------------------------	
             }
-
+            
 		}
-
+        
     }
 
 

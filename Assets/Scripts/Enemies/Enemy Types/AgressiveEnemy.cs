@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Pathfinding;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ public class AgressiveEnemy : Enemy
     protected Player player1Variables;
     protected Player player2Variables;
 
+    protected AIDestinationSetter pathfinder;
+
     protected ChaseHandler chasehandler;
     protected WanderHandler wanderHandler;
     protected DetectionSystem detectionSystem;
@@ -27,7 +30,9 @@ public class AgressiveEnemy : Enemy
         player1 = GameObject.Find("Player");
         player2 = GameObject.Find("Player2");
 
-        chasehandler = new ChaseHandler(animator, myRigidBody, transform, speed);
+        pathfinder = GetComponent<AIDestinationSetter>();
+
+        chasehandler = new ChaseHandler(animator, myRigidBody, transform, speed, pathfinder);
         wanderHandler = new WanderHandler(delayToAct);
         detectionSystem = new DetectionSystem(transform, player1.transform, player2.transform, detectionRange);
 

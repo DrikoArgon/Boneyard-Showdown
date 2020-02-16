@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4802969304837666}
   - component: {fileID: 212064301015084110}
   - component: {fileID: 61108840266190556}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bottom
   m_TagString: Scenario
   m_Icon: {fileID: 0}
@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 4005085747221868}
   - component: {fileID: 212306058937185960}
   - component: {fileID: 61510991542651592}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Upper
   m_TagString: Scenario
   m_Icon: {fileID: 0}

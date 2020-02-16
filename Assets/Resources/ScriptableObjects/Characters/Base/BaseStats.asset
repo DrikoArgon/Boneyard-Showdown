@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8272eeb4b0dd7d944952f6367e60f640, type: 3}
   m_Name: BaseStats
   m_EditorClassIdentifier: 
-  speed: 2.5
+  speed: 2
   maxLife: 4
   initialMagicDamage: 1
   initialMeleeDamage: 1.5

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Pathfinding;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +10,24 @@ public class ChaseHandler
     private Rigidbody2D enemyRigidBody;
     private Transform enemyTransform;
     private float enemySpeed;
+    private AIDestinationSetter pathfinder;
 
-    public ChaseHandler(Animator animator, Rigidbody2D rb, Transform transform, float speed) {
+    public ChaseHandler(Animator animator, Rigidbody2D rb, Transform transform, float speed, AIDestinationSetter _pathfinder) {
         enemyAnimator = animator;
         enemyRigidBody = rb;
         enemyTransform = transform;
         enemySpeed = speed;
+        pathfinder = _pathfinder;
+    }
+
+    public void SetTarget(Transform target) {
+        if(pathfinder.target == null) {
+            pathfinder.target = target;
+        }      
+    }
+
+    public void StopChasing() {
+        pathfinder.target = null;
     }
 
     public EnemyDirection ChaseMelee(Transform target) {
