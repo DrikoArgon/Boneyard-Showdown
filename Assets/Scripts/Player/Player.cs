@@ -165,6 +165,8 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate () {
+
+        myRigidBody.velocity = Vector2.zero;
 		//movement Logic
 		if (!attacking && !dying) {
 

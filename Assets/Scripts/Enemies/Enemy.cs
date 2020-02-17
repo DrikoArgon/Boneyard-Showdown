@@ -22,6 +22,8 @@ public class Enemy : MonoBehaviour {
 	public int numberOfBones;
     public AudioClip deathSound;
     public GameObject mySpawner;
+    public CircleCollider2D randomWanderRadius;
+    public float timeBetweenWanderMovements;
 
     protected AudioSource source;
     protected Animator animator;
@@ -40,9 +42,10 @@ public class Enemy : MonoBehaviour {
 	protected bool attacking;
 	protected bool dying;
     protected bool walking;
-    public AIPath aiPath;
+    protected AIPath aiPath;
+    protected AIDestinationSetter pathfinder;
 
-	protected float invulnerableTimeStamp;
+    protected float invulnerableTimeStamp;
 
     protected virtual void InitializeEnemy() {
 
@@ -50,8 +53,8 @@ public class Enemy : MonoBehaviour {
         animator = GetComponent<Animator>();
         myRigidBody = GetComponent<Rigidbody2D>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
-        //aiPath.GetComponent<AIPath>();
-
+        aiPath = GetComponent<AIPath>();
+        pathfinder = GetComponent<AIDestinationSetter>();
     }
 
 	public void Flash(){
@@ -203,7 +206,7 @@ public class Enemy : MonoBehaviour {
         }
 
         if (aiPath.desiredVelocity.x != 0 || aiPath.desiredVelocity.y != 0) {
-            if (aiPath.desiredVelocity.x != 0) {
+            if (aiPath.desiredVelocity.x > 0.2f || aiPath.desiredVelocity.x < -0.2f) {
                 animator.SetFloat("HorizontalMovement", 1f);
                 animator.SetFloat("VerticalMovement", 0f);
             } else {

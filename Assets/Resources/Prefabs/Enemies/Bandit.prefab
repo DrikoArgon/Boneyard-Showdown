@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 82133963556878546}
   - component: {fileID: 1000388302}
   - component: {fileID: 1000388303}
-  - component: {fileID: 1000388311}
+  - component: {fileID: 7372642720216362939}
   m_Layer: 9
   m_Name: Bandit
   m_TagString: Enemy
@@ -226,6 +226,7 @@ Transform:
   - {fileID: 4443070195038204}
   - {fileID: 4761944785442888}
   - {fileID: 4462125376115312}
+  - {fileID: 4827439618287624191}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -346,10 +347,11 @@ MonoBehaviour:
   numberOfBones: 8
   deathSound: {fileID: 8300000, guid: 850989a384452427ab9d8e7156210ee9, type: 3}
   mySpawner: {fileID: 0}
+  randomWanderRadius: {fileID: 696298912707952182}
+  timeBetweenWanderMovements: 3
   invulnerableSeconds: 1
   detectionRange: 2
-  delayToAct: 3
-  attackCooldown: 0
+  attackCooldown: 2
   boneSpawnPoint1: {fileID: 4449411289566260}
   boneSpawnPoint2: {fileID: 4550459262014776}
   boneSpawnPoint3: {fileID: 4165527245728010}
@@ -492,7 +494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 2
-  radius: 0.15
+  radius: 0.25
   height: 2
   repathRate: 0.5
   canSearch: 1
@@ -509,8 +511,8 @@ MonoBehaviour:
   maxAcceleration: -2.5
   rotationSpeed: 360
   slowdownDistance: 0.6
-  pickNextWaypointDist: 2
-  endReachedDistance: 0.2
+  pickNextWaypointDist: 0.1
+  endReachedDistance: 0.3
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
@@ -543,7 +545,7 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &1000388311
+--- !u!114 &7372642720216362939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -677,3 +679,50 @@ Transform:
   m_Father: {fileID: 4580572683746574}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3131285425953931287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4827439618287624191}
+  - component: {fileID: 696298912707952182}
+  m_Layer: 9
+  m_Name: wanderRadius
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4827439618287624191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3131285425953931287}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4580572683746574}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &696298912707952182
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3131285425953931287}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.5

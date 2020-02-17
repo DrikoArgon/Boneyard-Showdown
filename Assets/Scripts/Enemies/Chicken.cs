@@ -27,23 +27,20 @@ public class Chicken : PassiveEnemy {
 
 
         //Chicken walking logic
-        enemyDirection = wanderHandler.RandomWander();
+        wanderHandler.RandomWander(timeBetweenWanderMovements, randomWanderRadius);
 
         CheckInvinsibility();
 
         CheckDamageReceived();
 
-        DefineDirectionToLook();
+        DefineAnimationDirection();
+        //DefineDirectionToLook();
 
     }
 
     private void FixedUpdate() {
 
-        if (dying) {
-            return;
-        }
-        //Move chicken
-        BasicMovement();
+
     }
 
 

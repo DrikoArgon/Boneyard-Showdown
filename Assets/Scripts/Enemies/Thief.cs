@@ -37,8 +37,10 @@ public class Thief : RangedEnemy {
         detectionSystem.HandlePlayerDetection();
 
         if (!detectionSystem.IsTargetDetected()) {
-            enemyDirection = wanderHandler.RandomWander();
+            wanderHandler.RandomWander(timeBetweenWanderMovements, randomWanderRadius);
         } else {
+
+            chasehandler.SetTarget(detectionSystem.GetCurrentTarget());
 
             if (!attacking) {
 
@@ -55,7 +57,7 @@ public class Thief : RangedEnemy {
 
         CheckDamageReceived();
 
-        DefineDirectionToLook();
+        DefineAnimationDirection();
 
         CheckStatusForAnimation();
 
@@ -66,25 +68,6 @@ public class Thief : RangedEnemy {
     // Update is called once per frame
     void FixedUpdate () {
 
-        if (dying) {
-            return;
-        }
-
-        if (!detectionSystem.IsTargetDetected()) {
-
-            //Random movement -------------------------------------------------           
-            BasicMovement();
-			//----------------------------------------------------------------------
-
-		} else {
-
-			if(!attacking){
-                //Chasing Target --------------------------------------------------------
-                enemyDirection = chasehandler.ChaseMelee(detectionSystem.GetCurrentTarget());
-                walking = true;
-                //------------------------------------------------------------------------	        
-            }			
-		}
 	}
 
 }

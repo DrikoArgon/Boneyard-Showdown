@@ -9,7 +9,6 @@ public class MeleeAttack : MonoBehaviour {
 
 	private Direction directionToStab;
 	private Player playerController;
-	private float timeToDestroy;
 
 	public enum PlayerWhoOwnsTheKnife
 	{
@@ -20,8 +19,6 @@ public class MeleeAttack : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		timeToDestroy = 0.5f;
-	
 
 		if (player == PlayerWhoOwnsTheKnife.Player1) {
 			playerController = GameObject.Find ("Player").GetComponent<Player> ();
@@ -40,8 +37,6 @@ public class MeleeAttack : MonoBehaviour {
 		} else {
 			directionToStab = Direction.Down;
 		}
-
-		Destroy (gameObject, timeToDestroy);
 		
 	}
 	
@@ -83,10 +78,11 @@ public class MeleeAttack : MonoBehaviour {
 				}
 
             }
-		}
+		}    
+    }
 
-        
-
+    public void DestroyObject() {
+        Destroy(this);
     }
 
 }

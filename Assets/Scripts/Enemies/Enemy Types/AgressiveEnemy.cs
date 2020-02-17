@@ -6,7 +6,6 @@ using UnityEngine;
 public class AgressiveEnemy : Enemy
 {
     public float detectionRange = 2;
-    public float delayToAct;
     public float attackCooldown;
 
     protected GameObject player1;
@@ -14,8 +13,6 @@ public class AgressiveEnemy : Enemy
 
     protected Player player1Variables;
     protected Player player2Variables;
-
-    protected AIDestinationSetter pathfinder;
 
     protected ChaseHandler chasehandler;
     protected WanderHandler wanderHandler;
@@ -28,13 +25,11 @@ public class AgressiveEnemy : Enemy
         base.InitializeEnemy();
 
         player1 = GameObject.Find("Player");
-        player2 = GameObject.Find("Player2");
-
-        pathfinder = GetComponent<AIDestinationSetter>();
+        player2 = GameObject.Find("Player2");    
 
         chasehandler = new ChaseHandler(animator, myRigidBody, transform, speed, pathfinder);
-        wanderHandler = new WanderHandler(delayToAct);
-        detectionSystem = new DetectionSystem(transform, player1.transform, player2.transform, detectionRange);
+        wanderHandler = new WanderHandler(aiPath);
+        detectionSystem = new DetectionSystem(transform, player1.transform, player2.transform, detectionRange, pathfinder);
 
         player1Variables = player1.GetComponent<Player>();
         player2Variables = player2.GetComponent<Player>();
@@ -42,6 +37,7 @@ public class AgressiveEnemy : Enemy
 
     public virtual void StopAttacking() {
 
+        aiPath.canMove = true;
         attacking = false;
 
     }

@@ -43,8 +43,7 @@ public class Bandit : MeleeEnemy {
         //--------------------------------------------------------------------------------
 
         if (!detectionSystem.IsTargetDetected()) {
-            enemyDirection = wanderHandler.RandomWander();
-            chasehandler.StopChasing();
+            wanderHandler.RandomWander(timeBetweenWanderMovements, randomWanderRadius);
         } else {
             chasehandler.SetTarget(detectionSystem.GetCurrentTarget());
         }
@@ -55,46 +54,22 @@ public class Bandit : MeleeEnemy {
 
         DefineAnimationDirection();
 
-        //DefineDirectionToLook();
-
         CheckStatusForAnimation();
     }
 
     // Update is called once per frame
     void FixedUpdate () {
 
-        if (dying) {
-            return;
-        }
-        
-        if (!detectionSystem.IsTargetDetected()) {
-
-            //Random movement -------------------------------------------------
-
-            //BasicMovement();
-			//----------------------------------------------------------------------
-
-		} else {
-            
-			if(!attacking){
-				//Chasing Target --------------------------------------------------------
-
-                /*enemyDirection = chasehandler.ChaseMelee(detectionSystem.GetCurrentTarget());*/
-
-                //------------------------------------------------------------------------	
-            }
-            
-		}
         
     }
 
 
 	void OnCollisionEnter2D(Collision2D other){
 
-        if (!isAttackOnCooldown) {
+        if (!isAttackOnCooldown && !attacking) {
             if (other.gameObject.tag == "Player1" && !player1Variables.dead) {
                 attacking = true;
-
+                aiPath.canMove = false;
                 SpawnSlash();
 
                 animator.Play("Attack");
@@ -102,11 +77,13 @@ public class Bandit : MeleeEnemy {
             //
             if (other.gameObject.tag == "Player2" && !player2Variables.dead) {
                 attacking = true;
-
+                aiPath.canMove = false;
                 SpawnSlash();
 
                 animator.Play("Attack");
             }
+
+
         }
 		
 //
@@ -139,25 +116,27 @@ public class Bandit : MeleeEnemy {
 
 	void onCollisionStay(Collision2D other){
 
-		if (!attacking) {
-			if (other.gameObject.tag == "Player1" && !player1Variables.dead) {
-				attacking = true;
-
-                SpawnSlash();
-
-                animator.Play("Attack");
-			}
-			//
-			if (other.gameObject.tag == "Player2" && !player2Variables.dead) {
+        if (!isAttackOnCooldown && !attacking) {
+            if (other.gameObject.tag == "Player1" && !player1Variables.dead) {
                 attacking = true;
-
+                aiPath.canMove = false;
                 SpawnSlash();
 
                 animator.Play("Attack");
             }
-		}
+            //
+            if (other.gameObject.tag == "Player2" && !player2Variables.dead) {
+                attacking = true;
+                aiPath.canMove = false;
+                SpawnSlash();
 
-	}
+                animator.Play("Attack");
+            }
+
+
+        }
+
+    }
 
 
 }

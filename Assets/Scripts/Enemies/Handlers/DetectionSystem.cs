@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Pathfinding;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,13 +21,15 @@ public class DetectionSystem {
 
     private bool targetSpotted;
     private float detectionRange;
+    private AIDestinationSetter pathfinder;
 
-    public DetectionSystem(Transform transform, Transform player1, Transform player2,float detectionRange) {
+    public DetectionSystem(Transform transform, Transform player1, Transform player2, float detectionRange, AIDestinationSetter pathfinder) {
 
         enemyTransform = transform;
         this.detectionRange = detectionRange; 
         this.player1 = player1;
         this.player2 = player2;
+        this.pathfinder = pathfinder;
 
         player1Variables = player1.GetComponent<Player>();
         player2Variables = player2.GetComponent<Player>();
@@ -62,6 +65,7 @@ public class DetectionSystem {
         if (Vector2.Distance(enemyTransform.position, currentTarget.position) > detectionRange || currentTargetVariables.dead) {
             targetSpotted = false;
             currentTarget = null;
+            pathfinder.target = null;
         }
     }
 

@@ -18,7 +18,8 @@ public class RangedEnemy : AgressiveEnemy
             attacking = true;
 
             animator.Play("Attack");
-
+            aiPath.canMove = false;
+            isAttackOnCooldown = true;
             if (target.position.y > transform.position.y) {
                 GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPointUp.position, Quaternion.Euler(new Vector3(0, 0, 180)));
                 EnemyProjectile projectileVariables = projectile.GetComponent<EnemyProjectile>();
@@ -34,8 +35,8 @@ public class RangedEnemy : AgressiveEnemy
         if (Mathf.Abs(target.position.x - transform.position.x) < attackRange && Mathf.Abs(target.position.y - transform.position.y) < 0.2) {
             attacking = true;
             animator.Play("Attack");
-
-
+            isAttackOnCooldown = true;
+            aiPath.canMove = false;
             if (target.position.x > transform.position.x) {
                 GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPointRight.position, Quaternion.Euler(new Vector3(0, 0, 90)));
                 EnemyProjectile knifeVariables = projectile.GetComponent<EnemyProjectile>();
