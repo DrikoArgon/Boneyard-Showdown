@@ -21,3 +21,5 @@ MonoBehaviour:
   meleeAttackPrefabPlayer2: {fileID: 7460519966587513965, guid: b4a68ec58b1b37845b87a66666a1b3eb,
     type: 3}
   animatorController: {fileID: 9100000, guid: 710ab7f3537ad4d0ea3a084efb4573ac, type: 2}
+  firingPointsPrefab: {fileID: 9166317255919858537, guid: dc37794792aae8c45921b7257f6239e6,
+    type: 3}

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 61753388993967886}
   - component: {fileID: 95911185879872890}
   - component: {fileID: 707866701233154076}
+  - component: {fileID: 7906848713924988846}
   m_Layer: 11
   m_Name: Player2
   m_TagString: Player2
@@ -33,12 +34,9 @@ Transform:
   m_LocalPosition: {x: 13.24, y: -1.47, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4433538680206524}
-  - {fileID: 4877160541398536}
-  - {fileID: 4193383354775348}
   - {fileID: 4746540230681616}
   - {fileID: 4069990760772376}
-  - {fileID: 4884582931980696}
+  - {fileID: 4796434131701921625}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -79,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -291229781
-  m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300006, guid: 392bace887eb449d29bf82a75674340e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -134,12 +132,8 @@ MonoBehaviour:
   expBar: {fileID: 4279818033038248}
   collectibleBonePrefab: {fileID: 1436358443323690, guid: c5ce53ca338324004884167c12c0313f,
     type: 3}
-  upFiringPoint: {fileID: 4433538680206524}
-  rightFiringPoint: {fileID: 4877160541398536}
-  downFiringPoint: {fileID: 4193383354775348}
   baseStats: {fileID: 11400000, guid: 51698e3753c70d04ba46cd8810959bbb, type: 2}
   characterStats: {fileID: 11400000, guid: f2444be48a8a095488be5112031ef136, type: 2}
-  boneAmount: 0
   inputMappings: {fileID: 11400000, guid: f43fcef0703c77540bff80e261ad91f7, type: 2}
   direction: 3
   inicialDirection: 3
@@ -214,36 +208,19 @@ MonoBehaviour:
   lvl3Sprite: {fileID: 21300000, guid: 08b18e09ff92d4bb5917f67f84901cc5, type: 3}
   lvl4Sprite: {fileID: 21300000, guid: cb12cb39041744b2b8c1637a92f86d7d, type: 3}
   lvl5Sprite: {fileID: 21300000, guid: 67b34655861484f4aba4c009259308a4, type: 3}
---- !u!1 &1137000162426852
-GameObject:
+--- !u!114 &7906848713924988846
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4877160541398536}
-  m_Layer: 0
-  m_Name: Player2RightFiringPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4877160541398536
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1137000162426852}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.051, y: -0.084, z: 0}
-  m_LocalScale: {x: 1.0000001, y: 1, z: 1.0000001}
-  m_Children: []
-  m_Father: {fileID: 4762161791848034}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 1136733024987272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 660e327b00fb95d4984f0fa7b1734530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referencePoint: {fileID: 4796434131701921625}
 --- !u!1 &1206583774861850
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,12 +245,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1206583774861850}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.229, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.0029999763, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children: []
-  m_Father: {fileID: 4762161791848034}
-  m_RootOrder: 5
+  m_Father: {fileID: 4746540230681616}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &212482305539734974
 SpriteRenderer:
@@ -312,7 +289,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -291229781
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 168dd6072b2684241a32264c5a180a27, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -393,7 +370,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -291229781
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: fa62cc6cd9eb24278a0f1a90657e9272, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -474,7 +451,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -291229781
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: cde9efaf499dc41d9a34a6b5a86fa53f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -487,36 +464,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1566215403272872
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4433538680206524}
-  m_Layer: 0
-  m_Name: Player2UpFiringPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4433538680206524
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566215403272872}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.008, y: 0.138, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4762161791848034}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1580958247532564
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,8 +494,9 @@ Transform:
   m_Children:
   - {fileID: 4194013898501026}
   - {fileID: 4279818033038248}
+  - {fileID: 4884582931980696}
   m_Father: {fileID: 4762161791848034}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &212160574318457248
 SpriteRenderer:
@@ -587,7 +535,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -291229781
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 98002ad66129d4b108d844c160a589e9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -628,9 +576,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4762161791848034}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1842042795206508
+--- !u!1 &7160406887172169816
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -638,24 +586,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4193383354775348}
-  m_Layer: 0
-  m_Name: Player2DownFiringPoint
+  - component: {fileID: 4796434131701921625}
+  m_Layer: 10
+  m_Name: ReferencePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4193383354775348
+--- !u!4 &4796434131701921625
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842042795206508}
+  m_GameObject: {fileID: 7160406887172169816}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.107, z: 0}
-  m_LocalScale: {x: 1.0000001, y: 0.9999999, z: 1.0000001}
+  m_LocalPosition: {x: 0, y: -0.16100001, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children: []
   m_Father: {fileID: 4762161791848034}
   m_RootOrder: 2

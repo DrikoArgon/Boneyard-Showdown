@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Thief : RangedEnemy {
 
-	public Transform boneSpawnPoint1;
-	public Transform boneSpawnPoint2;
-	public Transform boneSpawnPoint3;
-	public Transform boneSpawnPoint4;
 	public Transform knifeSpawnPointUp;
 	public Transform knifeSpawnPointRight;
 	public Transform knifeSpawnPointDown;

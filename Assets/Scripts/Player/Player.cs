@@ -32,9 +32,12 @@ public class Player : MonoBehaviour {
 	private GameObject meleeAttackPrefab;
 
 	//Firing points
-	public Transform upFiringPoint; 
-	public Transform rightFiringPoint; 
-	public Transform downFiringPoint;
+	private Transform upFiringPoint;
+    private Transform rightFiringPoint;
+    private Transform downFiringPoint;
+
+    private Transform upRightFiringPoint;
+    private Transform downRightFiringPoint;
 
     //Stats variables
     public CharacterBaseStats baseStats;
@@ -99,6 +102,7 @@ public class Player : MonoBehaviour {
         animator = GetComponent<Animator>();
         myRigidBody = GetComponent<Rigidbody2D>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+
     }
 
     // Use this for initialization
@@ -128,7 +132,16 @@ public class Player : MonoBehaviour {
 
         animator.runtimeAnimatorController = characterStats.animatorController;
 
-        if(representsPlayer == RepresentsPlayer.Player1) {
+        GameObject firingPointsParent = Instantiate(characterStats.firingPointsPrefab, transform );
+
+        upFiringPoint = firingPointsParent.transform.Find("UpFiringPoint");
+        downFiringPoint = firingPointsParent.transform.Find("DownFiringPoint");
+        rightFiringPoint = firingPointsParent.transform.Find("RightFiringPoint");
+
+        upRightFiringPoint = firingPointsParent.transform.Find("UpRightFiringPoint");
+        downRightFiringPoint = firingPointsParent.transform.Find("DownRightFiringPoint");
+
+        if (representsPlayer == RepresentsPlayer.Player1) {
             magicProjectilePrefab = characterStats.projectilePrefab;
             meleeAttackPrefab = characterStats.meleeAttackPrefab;
         } else {
@@ -161,6 +174,7 @@ public class Player : MonoBehaviour {
         CollectMoveInputs();
         CheckForCooldowns();
         CheckForAttackingStasis();
+        CheckStatusForAnimation();
     }
 
     // Update is called once per frame
@@ -229,8 +243,12 @@ public class Player : MonoBehaviour {
 
     }
 
+    void FinishedAttack() {
+        attacking = false;
+    }
+
     void CheckStatusForAnimation() {
-        if (!dying && !dead) {
+        if (!dying && !dead && !attacking) {
             animator.Play("Walk");
         }
     }
@@ -239,14 +257,18 @@ public class Player : MonoBehaviour {
 
         if (!isMeleeAttackOnCooldown && !attacking) {
 
+            animator.Play("MeleeAttack");
+
             if (direction == PlayerDirection.Up) {
-                Instantiate(meleeAttackPrefab, upFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 90)));
+                Instantiate(meleeAttackPrefab, upFiringPoint.position, Quaternion.identity);
             } else if (direction == PlayerDirection.Right) {
                 Instantiate(meleeAttackPrefab, rightFiringPoint.position, Quaternion.identity);
-            } else if (direction == PlayerDirection.Left) {
-                Instantiate(meleeAttackPrefab, rightFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 180)));
-            } else {
-                Instantiate(meleeAttackPrefab, downFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 270)));
+            } else if (direction == PlayerDirection.UpRight) {
+                Instantiate(meleeAttackPrefab, upRightFiringPoint.position, Quaternion.identity);
+            } else if (direction == PlayerDirection.Down) {
+                Instantiate(meleeAttackPrefab, downFiringPoint.position, Quaternion.identity);
+            } else if (direction == PlayerDirection.DownRight) {
+                Instantiate(meleeAttackPrefab, downRightFiringPoint.position, Quaternion.identity);
             }
 
             attacking = true;
@@ -263,10 +285,12 @@ public class Player : MonoBehaviour {
                 Instantiate(magicProjectilePrefab, upFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 90)));
             } else if (direction == PlayerDirection.Right) {
                 Instantiate(magicProjectilePrefab, rightFiringPoint.position, Quaternion.identity);
-            } else if (direction == PlayerDirection.Left) {
-                Instantiate(magicProjectilePrefab, rightFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 180)));
-            } else {
+            } else if (direction == PlayerDirection.UpRight) {
+                Instantiate(magicProjectilePrefab, upRightFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 180)));
+            } else if (direction == PlayerDirection.Down) {
                 Instantiate(magicProjectilePrefab, downFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 270)));
+            } else if (direction == PlayerDirection.DownRight) {
+                Instantiate(magicProjectilePrefab, downRightFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 270)));
             }
 
             attacking = true;
@@ -299,7 +323,7 @@ public class Player : MonoBehaviour {
     }
 
     void CheckForAttackingStasis() {
-        if (attacking) {
+        if (attacking && isRangedAttackOnCooldown) {
 
             elapsedTime += Time.deltaTime;
 
@@ -327,7 +351,6 @@ public class Player : MonoBehaviour {
         } else {
             moveDirection.x = 0;
         }
-
 
     }
 
@@ -357,63 +380,36 @@ public class Player : MonoBehaviour {
             }          
         }
 
+        DefinePlayerDirection();
 
+    }
 
-        /*
-        if (Input.GetKey(inputMappings.moveUpKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) >= 0.5f)) {
-            MoveUp();
-        } else if (Input.GetKey(inputMappings.moveRightKey) || (Input.GetAxis(inputMappings.moveHorizontalGamepadAxis) >= 0.5f)) {
-            MoveRight();
-        } else if (Input.GetKey(inputMappings.moveLeftKey) || (Input.GetAxis(inputMappings.moveHorizontalGamepadAxis) <= -0.5f)) {
-            MoveLeft();
-        } else if (Input.GetKey(inputMappings.moveDownKey) || (Input.GetAxis(inputMappings.moveVerticalGamepadAxis) <= -0.5f)) {
-            MoveDown();
+    void DefinePlayerDirection() {
+
+        if (moveDirection.x != 0 && moveDirection.y != 0) { //Moving diagonally
+
+            if (moveDirection.y > 0) {
+                direction = PlayerDirection.UpRight;
+            } else {
+                direction = PlayerDirection.DownRight;
+            }
+
+        } else {
+
+            if (moveDirection.x != 0) {
+                direction = PlayerDirection.Right;
+            }
+
+            if (moveDirection.y != 0) {
+                if (moveDirection.y > 0) {
+                    direction = PlayerDirection.Up;
+                } else {
+                    direction = PlayerDirection.Down;
+                }
+            }
+
         }
-        */
-    }
 
-    public void MoveUp(){
-		myRigidBody.transform.position += Vector3.up * speed * Time.deltaTime;
-		animator.SetFloat("HorizontalMovement", 0f);
-        animator.SetFloat("VerticalMovement", 1f);
-		direction = PlayerDirection.Up;
-	}
-
-	// função moveRight
-	//
-	// Move o jogador para direita e aciona as animações respectivas
-	//   
-	public void MoveRight(){
-        myRigidBody.transform.position += Vector3.right * speed * Time.deltaTime;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1, 1);
-        lifeBar.parent.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1, 1);
-        animator.SetFloat("HorizontalMovement", 1f);
-        animator.SetFloat("VerticalMovement", 0f);
-        direction = PlayerDirection.Right;
-    }
-
-	// função moveDown
-	//
-	// Move o jogador para baixo e aciona as animações respectivas
-	//   
-	public void MoveDown(){
-        myRigidBody.transform.position += Vector3.down * speed * Time.deltaTime;
-        animator.SetFloat("HorizontalMovement", 0f);
-        animator.SetFloat("VerticalMovement", -1f);
-        direction = PlayerDirection.Down;
-    }
-
-	// função moveLeft
-	//
-	// Move o jogador para esquerda e aciona as animações respectivas
-	//   
-	public void MoveLeft(){
-        myRigidBody.transform.position += Vector3.left * speed * Time.deltaTime;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, 1, 1);
-        lifeBar.parent.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, 1, 1);
-        animator.SetFloat("HorizontalMovement", 1f);
-        animator.SetFloat("VerticalMovement", 0f);
-        direction = PlayerDirection.Left;
     }
 
 	public void TeleportToPosition(Vector3 pos){
@@ -573,5 +569,7 @@ public enum PlayerDirection{
 	Up,
 	Right,
 	Down,
-	Left
+	Left,
+    UpRight,
+    DownRight
 }

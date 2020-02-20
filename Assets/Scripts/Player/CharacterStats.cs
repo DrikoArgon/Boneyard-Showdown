@@ -12,4 +12,6 @@ public class CharacterStats : ScriptableObject
     public GameObject meleeAttackPrefabPlayer2;
 
     public RuntimeAnimatorController animatorController;
+
+    public GameObject firingPointsPrefab;
 }

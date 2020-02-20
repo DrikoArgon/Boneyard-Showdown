@@ -133,7 +133,7 @@ public class Enemy : MonoBehaviour {
             source.PlayOneShot(deathSound, 1.0f);
             animator.Play("Dying");
             dying = true;
-            Destroy(GetComponent<Rigidbody2D>());
+            aiPath.canMove = false;
             Destroy(GetComponent<Collider2D>());
 
         }

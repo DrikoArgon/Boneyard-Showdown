@@ -82,7 +82,7 @@ public class MeleeAttack : MonoBehaviour {
     }
 
     public void DestroyObject() {
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 
 }

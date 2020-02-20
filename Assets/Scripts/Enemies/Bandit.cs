@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class Bandit : MeleeEnemy {
 
-	public Transform boneSpawnPoint1;
-	public Transform boneSpawnPoint2;
-	public Transform boneSpawnPoint3;
-	public Transform boneSpawnPoint4;
-	public Transform boneSpawnPoint5;
-	public Transform boneSpawnPoint6;
-	public Transform boneSpawnPoint7;
-	public Transform slashSpawnPointUp;
-	public Transform slashSpawnPointRight;
-	public Transform slashSpawnPointDown;
-	public GameObject slashPrefab;
 
     private void Awake() {
         InitializeEnemy();
@@ -70,7 +59,7 @@ public class Bandit : MeleeEnemy {
             if (other.gameObject.tag == "Player1" && !player1Variables.dead) {
                 attacking = true;
                 aiPath.canMove = false;
-                SpawnSlash();
+                isAttackOnCooldown = true;
 
                 animator.Play("Attack");
             }
@@ -78,7 +67,7 @@ public class Bandit : MeleeEnemy {
             if (other.gameObject.tag == "Player2" && !player2Variables.dead) {
                 attacking = true;
                 aiPath.canMove = false;
-                SpawnSlash();
+                isAttackOnCooldown = true;
 
                 animator.Play("Attack");
             }
@@ -89,30 +78,6 @@ public class Bandit : MeleeEnemy {
 //
 	}
 
-    void SpawnSlash() {
-
-        switch (enemyDirection) {
-            case EnemyDirection.Up:
-                Instantiate(slashPrefab, slashSpawnPointUp.position, Quaternion.Euler(new Vector3(0, 0, 180)));
-                break;
-            case EnemyDirection.Right:
-                Instantiate(slashPrefab, slashSpawnPointRight.position, Quaternion.Euler(new Vector3(0, 0, 90)));
-                break;
-            case EnemyDirection.Down:
-                Instantiate(slashPrefab, slashSpawnPointDown.position, Quaternion.identity);
-                break;
-            case EnemyDirection.Left:
-                Instantiate(slashPrefab, slashSpawnPointRight.position, Quaternion.Euler(new Vector3(0, 0, 270)));
-                break;
-            case EnemyDirection.None:
-                break;
-            default:
-                Instantiate(slashPrefab, slashSpawnPointDown.position, Quaternion.identity);
-                break;
-        }
-
-        isAttackOnCooldown = true;
-    }
 
 	void onCollisionStay(Collision2D other){
 
@@ -120,7 +85,7 @@ public class Bandit : MeleeEnemy {
             if (other.gameObject.tag == "Player1" && !player1Variables.dead) {
                 attacking = true;
                 aiPath.canMove = false;
-                SpawnSlash();
+                isAttackOnCooldown = true;
 
                 animator.Play("Attack");
             }
@@ -128,7 +93,7 @@ public class Bandit : MeleeEnemy {
             if (other.gameObject.tag == "Player2" && !player2Variables.dead) {
                 attacking = true;
                 aiPath.canMove = false;
-                SpawnSlash();
+                isAttackOnCooldown = true;
 
                 animator.Play("Attack");
             }
