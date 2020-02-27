@@ -15,4 +15,12 @@ public class CharacterCastle : ScriptableObject
     public Sprite highLevelMinionScrollSpriteOn;
 
     public Sprite summoningAltarSprite;
+
+    public GameObject player1Level1MinionPrefab;
+    public GameObject player1Level2MinionPrefab;
+    public GameObject player1Level3MinionPrefab;
+
+    public GameObject player2Level1MinionPrefab;
+    public GameObject player2Level2MinionPrefab;
+    public GameObject player2Level3MinionPrefab;
 }

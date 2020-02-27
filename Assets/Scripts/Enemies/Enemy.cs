@@ -84,6 +84,7 @@ public class Enemy : MonoBehaviour {
 		receivedDamage = false;
 		invulnerable = true;
 		invulnerableTimeStamp = Time.time + invulnerableSeconds;
+        aiPath.canMove = false;
 
 	}
 
@@ -91,6 +92,7 @@ public class Enemy : MonoBehaviour {
         if (invulnerableTimeStamp < Time.time) {
             invulnerable = false;
             mySpriteRenderer.enabled = true;
+            aiPath.canMove = true;
         }
 
         if (invulnerable) {

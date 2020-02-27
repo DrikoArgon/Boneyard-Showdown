@@ -105,4 +105,14 @@ public class GameManager : MonoBehaviour {
 			
 
 	}
+
+    public void AttackCastle(bool isPlayer1Castle, int damage) {
+        if (isPlayer1Castle) {
+            player1CastleLife -= damage;
+            player1CastleUnderAttack = true;
+        } else {
+            player2CastleLife -= damage;
+            player2CastleUnderAttack = true;
+        }
+    }
 }

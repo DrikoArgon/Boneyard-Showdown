@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 82130229093788088}
   m_Layer: 0
   m_Name: Player2SkeletonLevel1
-  m_TagString: Player2Skeleton
+  m_TagString: Player2Minion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -291229781
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300006, guid: 091367f5dd2514f5cb8e08bcc8bca467, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -98,14 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bb54cc4c118a4cc6a5bf1a809114a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 1
-  damage: 1
-  speed: 0.5
+  minionStats: {fileID: 11400000, guid: c244df9d4f6ac1d469e5a0e07184537d, type: 2}
   direction: 1
-  riseSound: {fileID: 8300000, guid: 01ee4aafcdeda49e5a44e365e5ab5d8a, type: 3}
-  attackingCastleSound: {fileID: 8300000, guid: fd0e7a212d2cf49daa277b0c7dbef998,
-    type: 3}
-  alreadyBeingAttacked: 0
 --- !u!50 &50277953605610544
 Rigidbody2D:
   serializedVersion: 4
