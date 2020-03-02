@@ -25,3 +25,15 @@ MonoBehaviour:
   highLevelMinionScrollSpriteOn: {fileID: 21300000, guid: 2eb0ba926fc86431683b719f8cc36b7f,
     type: 3}
   summoningAltarSprite: {fileID: 0}
+  player1Level1MinionPrefab: {fileID: 1232863060265252, guid: 87915deadc65d48a4b6ca38da86e88f9,
+    type: 3}
+  player1Level2MinionPrefab: {fileID: 1661089131469190, guid: 116f5f771e44343de9b557fae79f86bb,
+    type: 3}
+  player1Level3MinionPrefab: {fileID: 1179746936063102, guid: 00f12f27e81c3430997e6e6251632bed,
+    type: 3}
+  player2Level1MinionPrefab: {fileID: 1586385255024810, guid: 94dfd9ecab2a2437d9a6b0730ba3e2d7,
+    type: 3}
+  player2Level2MinionPrefab: {fileID: 1554700996942940, guid: 8780ac6955c2c4754b5a73c8e1e544a3,
+    type: 3}
+  player2Level3MinionPrefab: {fileID: 1382402591930106, guid: 7f1d6f1036ead43e3a43383a8b19fe35,
+    type: 3}

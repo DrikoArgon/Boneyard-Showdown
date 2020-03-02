@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76175970ec39d464cb04fc8a96c1100e, type: 3}
+  m_Name: Skeleton_Level2
+  m_EditorClassIdentifier: 
+  life: 2
+  damage: 1
+  speed: 0.5
+  riseSound: {fileID: 8300000, guid: 01ee4aafcdeda49e5a44e365e5ab5d8a, type: 3}
+  attackingCastleSound: {fileID: 8300000, guid: fd0e7a212d2cf49daa277b0c7dbef998,
+    type: 3}

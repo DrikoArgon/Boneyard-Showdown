@@ -76,7 +76,8 @@ public class Player : MonoBehaviour {
     //States
     private Vector3 moveDirection;
     private bool moving;
-	private bool attacking;
+	private bool meleeAttacking;
+    private bool rangedAttacking;
     private bool isMeleeAttackOnCooldown;
     private bool isRangedAttackOnCooldown;
 
@@ -96,6 +97,7 @@ public class Player : MonoBehaviour {
 	private int flashingCounter;
 	private bool toggleFlashing = false;
 
+    private float meleeAttackAnimationLength;
 
     private void Awake() {
 
@@ -148,8 +150,8 @@ public class Player : MonoBehaviour {
             magicProjectilePrefab = characterStats.projectilePrefabPlayer2;
             meleeAttackPrefab = characterStats.meleeAttackPrefabPlayer2;
         }
-        
 
+        DefineAnimationLengths();
     }
 
     private void DefineCharacterStats() {
@@ -173,16 +175,18 @@ public class Player : MonoBehaviour {
 
         CollectMoveInputs();
         CheckForCooldowns();
-        CheckForAttackingStasis();
+        CheckForAttackAnimationEnd();
         CheckStatusForAnimation();
+
+        myRigidBody.velocity = Vector2.zero;
+
     }
 
     // Update is called once per frame
     void FixedUpdate () {
 
-        myRigidBody.velocity = Vector2.zero;
 		//movement Logic
-		if (!attacking && !dying) {
+		if (!meleeAttacking && !dying && !rangedAttacking) {
 
             Move();
 
@@ -194,13 +198,13 @@ public class Player : MonoBehaviour {
 			mySpriteRenderer.enabled = true;
 
 			//Magic logic
-			if ((Input.GetKeyDown (inputMappings.shootKey) || Input.GetButtonDown(inputMappings.shootMagicGamepadButton)) && !dying && !dead) {
+			if ((Input.GetKeyDown (inputMappings.shootKey) || Input.GetButtonDown(inputMappings.shootMagicGamepadButton)) && !dying && !dead && !meleeAttacking && !rangedAttacking) {
 
                 DoRangedAttack();
 			}
 
 			//Attacking logic
-			if ((Input.GetKeyDown (inputMappings.stabKey) || Input.GetButtonDown(inputMappings.stabGamepadButton)) && !dying && !dead) {
+			if ((Input.GetKeyDown (inputMappings.stabKey) || Input.GetButtonDown(inputMappings.stabGamepadButton)) && !dying && !dead && !meleeAttacking && !rangedAttacking) {
 
                 DoMeleeAttack();
 			}
@@ -243,19 +247,32 @@ public class Player : MonoBehaviour {
 
     }
 
-    void FinishedAttack() {
-        attacking = false;
+    void DefineAnimationLengths() {
+
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+
+        foreach(AnimationClip clip in clips) {
+
+            String[] words = clip.name.Split('_');
+
+            if(words[1] == "Attack") {
+                meleeAttackAnimationLength = clip.length / 1.5f;
+            }
+
+        }
+
+
     }
 
     void CheckStatusForAnimation() {
-        if (!dying && !dead && !attacking) {
+        if (!dying && !dead && !meleeAttacking && !rangedAttacking) {
             animator.Play("Walk");
         }
     }
 
     void DoMeleeAttack() {
 
-        if (!isMeleeAttackOnCooldown && !attacking) {
+        if (!isMeleeAttackOnCooldown && !meleeAttacking) {
 
             animator.Play("MeleeAttack");
 
@@ -271,7 +288,7 @@ public class Player : MonoBehaviour {
                 Instantiate(meleeAttackPrefab, downRightFiringPoint.position, Quaternion.identity);
             }
 
-            attacking = true;
+            meleeAttacking = true;
             isMeleeAttackOnCooldown = true;
         }
        
@@ -279,7 +296,7 @@ public class Player : MonoBehaviour {
 
     void DoRangedAttack() {
 
-        if (!isRangedAttackOnCooldown && !attacking) {
+        if (!isRangedAttackOnCooldown && !meleeAttacking) {
 
             if (direction == PlayerDirection.Up) {
                 Instantiate(magicProjectilePrefab, upFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 90)));
@@ -293,9 +310,34 @@ public class Player : MonoBehaviour {
                 Instantiate(magicProjectilePrefab, downRightFiringPoint.position, Quaternion.Euler(new Vector3(0, 0, 270)));
             }
 
-            attacking = true;
+            rangedAttacking = true;
             isRangedAttackOnCooldown = true;
         }
+    }
+
+    void CheckForAttackAnimationEnd() {
+        if (meleeAttacking) {
+            elapsedTime += Time.deltaTime;
+
+            if(elapsedTime > meleeAttackAnimationLength) {
+                isMeleeAttackOnCooldown = true;
+                meleeAttacking = false;
+                elapsedTime = 0;
+            }
+
+        }
+
+        if (rangedAttacking) {
+
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime > meleeAttackAnimationLength) {
+                isRangedAttackOnCooldown = true;
+                rangedAttacking = false;
+                elapsedTime = 0;
+            }
+        }
+
     }
 
     void CheckForCooldowns() {
@@ -322,17 +364,6 @@ public class Player : MonoBehaviour {
 
     }
 
-    void CheckForAttackingStasis() {
-        if (attacking && isRangedAttackOnCooldown) {
-
-            elapsedTime += Time.deltaTime;
-
-            if (elapsedTime > timeToMoveAfterAttack) {
-                elapsedTime = 0;
-                attacking = false;
-            }
-        }
-    }
 
     void CollectMoveInputs() {
 

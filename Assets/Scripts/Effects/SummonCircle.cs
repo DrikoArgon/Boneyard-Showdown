@@ -11,7 +11,7 @@ public class SummonCircle : MonoBehaviour {
 	public SpriteRenderer backSummonEffect;
 	public SpriteRenderer frontSummonEffect;
 	public int boneAmountNeeded;
-	public GameObject skeletonToSummonPrefab;
+	public GameObject minionToSummonPrefab;
 	public int levelOfSkeletonCreated;
 	public KeyCode summonKey;
 	public string summonGamepadButton;
@@ -35,7 +35,7 @@ public class SummonCircle : MonoBehaviour {
 			if (scrollOn.activeSelf) {
 				if(Input.GetKeyDown(summonKey) || Input.GetButtonDown(summonGamepadButton)){
 					source.PlayOneShot (summoningSound, 1.0f);
-					SummonSkeleton ();
+					SummonMinion ();
 				}
 			}
 		}
@@ -75,7 +75,11 @@ public class SummonCircle : MonoBehaviour {
         scrollOn.GetComponent<SpriteRenderer>().sprite = onSprite;
     }
 
-	public void SummonSkeleton(){
+    public void SetupMinionToSpawn(GameObject minionPrefab) {
+        minionToSummonPrefab = minionPrefab;
+    }
+
+	public void SummonMinion(){
 		playerInsideCircle.DecreaseBoneAmount(boneAmountNeeded);
 		playerInsideCircle.GrantExp(levelOfSkeletonCreated * 50);
 
@@ -85,13 +89,13 @@ public class SummonCircle : MonoBehaviour {
 			frontSummonEffect.enabled = false;
 		}
 
-		StartCoroutine (RiseSkeleton ());
+		StartCoroutine (RiseMinion ());
 	}
 
-	IEnumerator RiseSkeleton()
+	IEnumerator RiseMinion()
 	{
 		
 		yield return new WaitForSeconds(0.6f);
-		Instantiate(skeletonToSummonPrefab,towerSkeletonSpawnPoint.position,Quaternion.identity);
+		Instantiate(minionToSummonPrefab,towerSkeletonSpawnPoint.position,Quaternion.identity);
 	}
 }

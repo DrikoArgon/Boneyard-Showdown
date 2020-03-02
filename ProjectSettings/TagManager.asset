@@ -7,12 +7,12 @@ TagManager:
   - Scenario
   - Enemy
   - CollectibleBone
-  - Player1Skeleton
-  - Player2Skeleton
   - Player1Castle
   - Player2Castle
   - Player1
   - Player2
+  - Player1Minion
+  - Player2Minion
   layers:
   - Default
   - TransparentFX
